@@ -16,7 +16,7 @@ public class CRUD {
 	private Transaction tx;
 	
 	//metodo para iniciar la sesion
-	private void iniciaOperacion() throws HibernateException
+	public void iniciaOperacion() throws HibernateException
 	{
 		
 		//Creamos conexión BBDD e inicamos una sesion
