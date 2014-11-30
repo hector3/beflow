@@ -14,7 +14,7 @@ import org.hibernate.annotations.IndexColumn;
 
 public class Company implements Serializable{
 	
-//la relación tiene que ser bidireccional para que el id de la compañia salga en la tabla de usuario	
+//sla relación tiene que ser bidireccional para que el id de la compañia salga en la tabla de usuario	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id_company;

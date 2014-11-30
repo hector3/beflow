@@ -10,17 +10,17 @@
     <!-- Database connection settings -->
     
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/beflow</property>  
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/beflow_prod</property>  
          <!-- Aquí has de posar el teu user y contraseña-->
         <property name="hibernate.connection.username">root</property>  
-        <property name="hibernate.connection.password"></property>  
+        <property name="hibernate.connection.password">mysqlpass</property>  
          
         <!-- Configuracion del pool interno --> 
         <property name="connection.pool_size">1</property>
         
         <!-- Dialecto de la base de datos -->
         <!-- MYSQL 5 has de canviar org.hibernate.dialect.MySQL5Dialect-->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>  
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>  
         
         <!-- Otras propiedades importantes -->
         <property name="show_sql">true</property> 
@@ -29,8 +29,8 @@
         <property name="hbm2ddl.auto">create-drop</property>
         
         <!-- Archivos de mapeo //Full qualified class name  --> 
-        <mapping class="edu.upc.ettac.dxat.lihect.WS.BBDD.InfoUser" />
-        <mapping class="edu.upc.ettac.dxat.lihect.WS.BBDD.User" />
+        <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.User" />
+        <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.Company" />
   
     </session-factory>  
 </hibernate-configuration>  
