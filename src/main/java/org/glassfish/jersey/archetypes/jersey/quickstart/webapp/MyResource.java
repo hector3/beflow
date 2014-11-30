@@ -1,12 +1,14 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
 import java.net.UnknownHostException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 /**
@@ -27,16 +29,28 @@ public class MyResource {
     
 	/*
 	 * 
-	 * ruta para acceder http://localhost:8000/jersey-quickstart-webapp/beflow/myresource
+	 * iruta para acceder http://localhost:8000/jersey-quickstart-webapp/beflow/myresource
 	 * 
 	 */
-
+	@Path("/id")
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt(String s) throws UnknownHostException {
     	
 		return "Hello Jersey!!";
+    	
+    	
+    }
+	@Path("/id/{idUser}")
+	@GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getIt2(@PathParam("idUser") int idUser) throws UnknownHostException {
+		CRUD crud=new CRUD();
+		crud.iniciaOperacion();
+		String mensaje="Consulta sobre el usuario con id: "+idUser;
+		return mensaje;
     	
     	
     }
