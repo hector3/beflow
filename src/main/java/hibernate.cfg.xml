@@ -26,11 +26,12 @@
         <property name="show_sql">true</property> 
         
         <!-- Aquesta línea el que fa es buidar la taula com es en mode proves jo no la utilitzo, comentala si ho necessites --> 
-        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="hbm2ddl.auto">update</property>
         
         <!-- Archivos de mapeo //Full qualified class name  --> 
         <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.User" />
         <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.Company" />
+        <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.Node" />
   
     </session-factory>  
 </hibernate-configuration>  
