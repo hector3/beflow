@@ -2,6 +2,8 @@ package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
 import java.net.UnknownHostException;
 
+import wsobjects.*;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -39,6 +41,18 @@ public class MyResource {
 	 */
 	
 
+	@GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getItest() throws UnknownHostException {
+		
+		
+
+		return "Hello jersey";
+    	
+    	
+    }
+	
 	@Path("/id/{idUser}")
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,23 +66,56 @@ public class MyResource {
     	
     }
 
+	@Path("/login")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String checkLogin(String json) throws UnknownHostException{
+		
+		final CredWS cred1 = gson.fromJson(json, CredWS.class);
+		
+		
+		String resp = "estoy en login";
+//		String resp="No entra a ningun if";
+//		User user=crud.read_user(cred.getLogin());
+//		if((user.getLogin()==cred.getLogin())&&(user.getPassword()==cred.getPass()))
+//			{
+//			resp="Credenciales correctas. Devuelvo una url";
+//			}
+//		else if((user.getLogin()==cred.getLogin())&&(user.getPassword()!=cred.getPass()))
+//			{
+//			resp="Credenciales incorrectas. La contraseña no es correcta pero el login si";
+//			}
+//		else
+//			{
+//			resp="Error en la consulta";
+//			}
+//		
+		
+		
+		return cred1.getLogin();
+		
+
+    }	
+	
+	
 	@Path("/addUser")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertUser(User user) throws UnknownHostException{
+    public String insertUser(String json) throws UnknownHostException{
 		
-		Company comp=user.getCompany();
-		
-		
-		//Company comp=user.getCompany();
-		//System.out.println("La compañia es: "+comp.getCompany_name());
-		//comp.addUsuario(user);
-		//user.setCompany(comp);
-		//crud.create_user(user);	
-		
-		
-		return comp.getAddress();//gson.toJson(user);
+		final UserWS user = gson.fromJson(json, UserWS.class);
+		Company comp=crud.read_company(user.getName_company());
+		System.out.println("Compañia: "+comp.getCompany_name());
+		System.out.println("Direccion: "+comp.getAddress());
+		User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		//comp.addUsuario(userH);
+		//userH.setCompany(comp);
+	  	//crud.update_company(comp);
+	  	//String resp="Usuario añadido con exito: "+user.getName();
+	  	
+		return "h";
 		
 
     }
@@ -77,12 +124,12 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertCompany(Company comp) throws UnknownHostException{
+    public String insertCompany(String json) throws UnknownHostException{
 		
 		//return "hellooo";
+		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
+		Company comp = new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
 		crud.create_company(comp);
-		
-		
 		return "Empresa añadida: "+comp.getCompany_name();
 		
 
