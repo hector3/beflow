@@ -7,8 +7,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import edu.upc.ettac.dxat.lihect.WS.BBDD.Node;
-import edu.upc.ettac.dxat.lihect.WS.BBDD.User;
+import wsobjects.UserWS;
+
+
 
 
 
@@ -379,14 +380,38 @@ public class CRUD {
 		    return Lista_nodos; 
 		}
 		
+	/*********************************CRUD WS*************************************/
 		
+		
+		//Add a client of a company
+		
+		public long wsadd_user(Company comp, UserWS user)
+		{ 
+		    long id = 0; //id de la tabla user (único) 
+		    
+		    User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		    try 
+		    { 
+		        iniciaOperacion(); 
+		        
+		        comp.addUsuario(userH);
+		        userH.setCompany(comp);
+		        sesion.update(comp);
+		        
+		        //metodo para guardar cliente (del objeto hibernate.sesion) 
+		        tx.commit(); 
+		    }catch(HibernateException he) 
+		    { 
+		        manejaExcepcion(he);
+		        throw he; 
+		    }finally 
+		    { 
+		    	//Busqueda del id con qu elo ha introducido a la BBDD
+		    	id= (Long) sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+user.getLogin()+"'").uniqueResult();
+		        sesion.close(); 
+		    }  
+		    return id; 
+		}
+
 		
 }
-
-	
-
- 
-
-  
-	
-	

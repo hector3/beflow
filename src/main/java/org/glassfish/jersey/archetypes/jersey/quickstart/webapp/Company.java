@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import edu.upc.ettac.dxat.lihect.WS.BBDD.Node;
-import edu.upc.ettac.dxat.lihect.WS.BBDD.User;
 
 
 

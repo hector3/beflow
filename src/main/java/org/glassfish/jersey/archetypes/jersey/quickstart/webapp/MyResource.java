@@ -106,16 +106,29 @@ public class MyResource {
     public String insertUser(String json) throws UnknownHostException{
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
-		Company comp=crud.read_company(user.getName_company());
+		
+		
+		/*Company comp=crud.read_company(user.getName_company());
 		System.out.println("Compañia: "+comp.getCompany_name());
 		System.out.println("Direccion: "+comp.getAddress());
 		User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		*/
+		
 		//comp.addUsuario(userH);
 		//userH.setCompany(comp);
 	  	//crud.update_company(comp);
 	  	//String resp="Usuario añadido con exito: "+user.getName();
 	  	
+		
+		//LIDIA
+		Company comp= crud.read_company(user.getName_company());
+		crud.wsadd_user(comp,user);
+		
 		return "h";
+		
+		
+		
+		
 		
 
     }
