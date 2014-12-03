@@ -38,6 +38,8 @@ public class User implements Serializable{
     	this.department =department;
   
     }
+    
+    
    
     //constructor sin argumentos, para recuperar las entidades de la BBDD 
     public User()
