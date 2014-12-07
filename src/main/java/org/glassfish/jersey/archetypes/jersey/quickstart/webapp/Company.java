@@ -41,7 +41,6 @@ public class Company implements Serializable{
     	this.company_name = company_name;
     	this.address = address;
     	this.leader = leader;
-     
     }
    
 	//constructor sin argumentos, para recuperar las entidades de la BBDD 
@@ -92,6 +91,7 @@ public class Company implements Serializable{
  	public void addUsuario(User usuario)
  	    {
  	        this.usuarios.add(usuario);
+ 	        
  	    }
  	
  	public List<Node> getNodes() {
