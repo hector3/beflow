@@ -6,9 +6,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-
-
-
 @Entity
 @Table(name="Companies")
 
@@ -27,11 +24,11 @@ public class Company implements Serializable{
 	modo de recuperazión de datos lazy, los recupera cuando son necesarios, de esta manera no sobre
 	cargamos el sistema**/
 	//Relación tabla usuarios
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY,mappedBy="company")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER,mappedBy="company")
 	private List<User> usuarios = new ArrayList<User>();
 	
 	//relacion tabla nodos
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY,mappedBy="company")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER,mappedBy="company")
 	private List<Node> nodos = new ArrayList<Node>();
 	
 	
@@ -41,6 +38,7 @@ public class Company implements Serializable{
     	this.company_name = company_name;
     	this.address = address;
     	this.leader = leader;
+     
     }
    
 	//constructor sin argumentos, para recuperar las entidades de la BBDD 
@@ -91,7 +89,6 @@ public class Company implements Serializable{
  	public void addUsuario(User usuario)
  	    {
  	        this.usuarios.add(usuario);
- 	        
  	    }
  	
  	public List<Node> getNodes() {

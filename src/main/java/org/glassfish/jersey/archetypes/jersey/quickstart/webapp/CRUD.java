@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+
 import wsobjects.UserWS;
 
 
@@ -178,7 +179,7 @@ public class CRUD {
 		{ 
 		    try 
 		    { 
-		        //iniciaOperacion(); 
+		        iniciaOperacion(); 
 		        sesion.update(company); //metodo update de objeto sesion
 		        tx.commit();
 		    }catch (HibernateException he) 
@@ -187,7 +188,7 @@ public class CRUD {
 		        throw he; 
 		    }finally 
 		    { 
-		        //sesion.close(); 
+		        sesion.close(); 
 		    } 
 		}
 	    
@@ -384,44 +385,42 @@ public class CRUD {
 		
 		
 		//Add a client of a company
-
-		public long wsadd_user(String comp, UserWS user)
+		
+		public long wsadd_user( UserWS user)
 		{ 
-		  long id = 0; //id de la tabla user (único) 
-		  Company compa= read_company(comp);
-		  User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
-		  try 
-		  { 
-		      iniciaOperacion(); 
-//		      Company compa= read_company(comp);
-		      compa.addUsuario(userH);
-		      userH.setCompany(compa);
-		      update_company(compa);
-		      
-//		      
-//		      //metodo para guardar cliente (del objeto hibernate.sesion) 
-		      tx.commit(); 
-		      
-		      /*
-		       * You should not do session.getTransaction().commit(); this, the @transactional will take care of it. Remove it, you should be fine.
-
-
-		       */
-		  }catch(HibernateException he) 
-		  { 
-		      manejaExcepcion(he);
-		      throw he; 
-		  }finally 
-		  { 
-		  	//Busqueda del id con qu elo ha introducido a la BBDD
-//		  	id= (Long) sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+user.getLogin()+"'").uniqueResult();
-		      sesion.close(); 
-		  }  
-		  return id; 
+			Company compx= read_company(user.getName_company());
+		    long id = 0; //id de la tabla user (único) 
+		    System.out.println("hola0");
+		    User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		    System.out.println(compx.getCompany_name()+"hola");
+		    //User cliente1 = new User("luis.ortega@gmail.com", "gutie33", 1, "Luis","677899876", "Informatica"); 
+		    
+		    try 
+		    { 
+		        iniciaOperacion(); 
+		        System.out.println("hola3");
+		        
+		        compx.addUsuario(userH);
+		        System.out.println("hola4");
+			    userH.setCompany(compx);
+		        
+		        System.out.println("hola1");
+		        sesion.update(compx);
+		        
+		        //metodo para guardar cliente (del objeto hibernate.sesion) 
+		        tx.commit(); 
+		    }catch(HibernateException he) 
+		    { 
+		        manejaExcepcion(he);
+		        throw he; 
+		    }finally 
+		    { 
+		    	//Busqueda del id con qu elo ha introducido a la BBDD
+		    	id= (Long) sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+user.getLogin()+"'").uniqueResult();
+		        sesion.close(); 
+		    }  
+		    return id; 
 		}
 
 		
 }
-/*
-
-*/

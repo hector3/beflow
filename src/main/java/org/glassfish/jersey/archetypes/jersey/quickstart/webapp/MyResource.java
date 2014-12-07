@@ -103,10 +103,8 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertUser(String json) throws UnknownHostException{
+    public long insertUser(String json) throws UnknownHostException{
 		
-		
-
 		final UserWS user = gson.fromJson(json, UserWS.class);
 		
 		
@@ -124,13 +122,15 @@ public class MyResource {
 		
 		//LIDIA
 		
-		//System.out.println("La direccion de la compañia es: "+comp.getAddress());
-		crud.wsadd_user(user.getName_company(),user);
-
 		
-		return "h";
+		long id=crud.wsadd_user(user);
 		
-	
+		return id;
+		
+		
+		
+		
+		
 
     }
 	
@@ -140,13 +140,11 @@ public class MyResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String insertCompany(String json) throws UnknownHostException{
 		
-		
+		//return "hellooo";
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
 		Company comp = new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
-		crud.iniciaOperacion();
-		long id=crud.create_company(comp);
-		return "Id Empresa añadida: "+id;
-	
+		crud.create_company(comp);
+		return "Empresa añadida: "+comp.getCompany_name();
 		
 
     }
