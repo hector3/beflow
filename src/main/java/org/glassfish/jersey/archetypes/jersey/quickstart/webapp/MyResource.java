@@ -103,7 +103,7 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertUser(String json) throws UnknownHostException{
+    public long insertUser(String json) throws UnknownHostException{
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
 		
@@ -121,10 +121,11 @@ public class MyResource {
 	  	
 		
 		//LIDIA
-		Company comp= crud.read_company(user.getName_company());
-		crud.wsadd_user(comp,user);
 		
-		return "h";
+		
+		long id=crud.wsadd_user(user);
+		
+		return id;
 		
 		
 		

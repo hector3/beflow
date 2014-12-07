@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+
 import wsobjects.UserWS;
 
 
@@ -385,18 +386,26 @@ public class CRUD {
 		
 		//Add a client of a company
 		
-		public long wsadd_user(Company comp, UserWS user)
+		public long wsadd_user( UserWS user)
 		{ 
+			Company compx= read_company(user.getName_company());
 		    long id = 0; //id de la tabla user (único) 
-		    
+		    System.out.println("hola0");
 		    User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		    System.out.println(compx.getCompany_name()+"hola");
+		    //User cliente1 = new User("luis.ortega@gmail.com", "gutie33", 1, "Luis","677899876", "Informatica"); 
+		    
 		    try 
 		    { 
 		        iniciaOperacion(); 
+		        System.out.println("hola3");
 		        
-		        comp.addUsuario(userH);
-		        userH.setCompany(comp);
-		        sesion.update(comp);
+		        compx.addUsuario(userH);
+		        System.out.println("hola4");
+			    userH.setCompany(compx);
+		        
+		        System.out.println("hola1");
+		        sesion.update(compx);
 		        
 		        //metodo para guardar cliente (del objeto hibernate.sesion) 
 		        tx.commit(); 
