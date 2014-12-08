@@ -8,7 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-import wsobjects.UserWS;
+
+import wsobjects.*;
 
 
 
@@ -389,22 +390,17 @@ public class CRUD {
 		public long wsadd_user( UserWS user)
 		{ 
 			Company compx= read_company(user.getName_company());
-		    long id = 0; //id de la tabla user (único) 
-		    System.out.println("hola0");
+		    
+			long id = 0; //id de la tabla user (único) 
+		 
 		    User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
-		    System.out.println(compx.getCompany_name()+"hola");
-		    //User cliente1 = new User("luis.ortega@gmail.com", "gutie33", 1, "Luis","677899876", "Informatica"); 
 		    
 		    try 
 		    { 
 		        iniciaOperacion(); 
-		        System.out.println("hola3");
-		        
+		       
 		        compx.addUsuario(userH);
-		        System.out.println("hola4");
 			    userH.setCompany(compx);
-		        
-		        System.out.println("hola1");
 		        sesion.update(compx);
 		        
 		        //metodo para guardar cliente (del objeto hibernate.sesion) 
@@ -422,13 +418,26 @@ public class CRUD {
 		    return id; 
 		}
 
+		//busqueda de si el usuario existe para creacion de user 
+		public Boolean user_exists (UserWS user) {
+			
+			Query i = null;
+			
+			iniciaOperacion();
+			i = sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail = :login"); 
+		    i.setString("login", user.getLogin());
+		    
+		    return (i.uniqueResult() != null);
+		}
 		
+		//busqueda de si la compañia existe para creacion
+		public Boolean company_exists (CompanyWS comp) {
+					
+					Query i = null;
+					
+					iniciaOperacion();
+					i = sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name = :name"); 
+				    i.setString("name", comp.getCompany_name());
+				    return (i.uniqueResult() != null);
+				}
 }
-
-	
-
- 
-
-  
-	
-	
