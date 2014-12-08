@@ -2,6 +2,7 @@ package wsobjects;
 
 public class UserWS {
 	
+	long id_user;
 	String login;
 	String password;
 	int role;
@@ -11,7 +12,8 @@ public class UserWS {
 	String name_company;
 	
 	
-	public UserWS(String login, String password, int role, String name, String phone, String department, String name_company) {
+	public UserWS(long id_user,String login, String password, int role, String name, String phone, String department, String name_company) {
+		this.id_user=id_user;
 		this.login = login;
 		this.password = password;
 		this.role = role;
@@ -19,6 +21,16 @@ public class UserWS {
 		this.phone = phone;
 		this.department = department;
 		this.name_company = name_company;
+	}
+
+
+	public long getId_user() {
+		return id_user;
+	}
+
+
+	public void setId_user(long id_user) {
+		this.id_user = id_user;
 	}
 
 

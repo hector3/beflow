@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 
 
 
+
+
 import wsobjects.*;
 
 
@@ -150,15 +152,15 @@ public class CRUD {
 /********************************CRUD COMPANY*******************/
 	
 	// Añade una nueva compañia  devolviendo el id de la tabla
-	public long create_company(Company company)
+	public long create_company(CompanyWS company)
 	{ 
 	    long id = 0; //id de la tabla company) 
-
+	    Company comp= new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
 	    try 
 	    { 
 	        iniciaOperacion(); 
 	        //id= (Long) 
-	        sesion.persist(company); //metodo para guardar cliente (del objeto hibernate.sesion) 
+	        sesion.persist(comp); //metodo para guardar cliente (del objeto hibernate.sesion) 
 	        
 	        //sesion.persist(persona1);?
 	        //sesion.persist(persona2);?
@@ -391,17 +393,26 @@ public class CRUD {
 		{ 
 			Company compx= read_company(user.getName_company());
 		    
+			
 			long id = 0; //id de la tabla user (único) 
-		 
+			
+		    
 		    User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
+		    
+		    //User cliente1 = new User("luis.ortega@gmail.com", "gutie33", 1, "Luis","677899876", "Informatica"); 
 		    
 		    try 
 		    { 
 		        iniciaOperacion(); 
 		       
-		        compx.addUsuario(userH);
+		        id= (Long) sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name ='"+user.getName_company()+"'").uniqueResult();
+		        Company x = (Company) sesion.load(Company.class, id);
+		        x.addUsuario(userH);
+		      
 			    userH.setCompany(compx);
-		        sesion.update(compx);
+		     
+		        //sesion.update(compx);
+		        
 		        
 		        //metodo para guardar cliente (del objeto hibernate.sesion) 
 		        tx.commit(); 
@@ -417,27 +428,143 @@ public class CRUD {
 		    }  
 		    return id; 
 		}
-
-		//busqueda de si el usuario existe para creacion de user 
-		public Boolean user_exists (UserWS user) {
-			
-			Query i = null;
-			
-			iniciaOperacion();
-			i = sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail = :login"); 
-		    i.setString("login", user.getLogin());
-		    
-		    return (i.uniqueResult() != null);
-		}
 		
-		//busqueda de si la compañia existe para creacion
-		public Boolean company_exists (CompanyWS comp) {
+		//busqueda de si el usuario existe para creacion de user 
+				public Boolean user_exists (UserWS user) {
 					
 					Query i = null;
 					
 					iniciaOperacion();
-					i = sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name = :name"); 
-				    i.setString("name", comp.getCompany_name());
+					i = sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail = :login"); 
+				    i.setString("login", user.getLogin());
+				    
 				    return (i.uniqueResult() != null);
 				}
+				
+		//busqueda de si la compañia existe para creacion
+				public Boolean company_exists (CompanyWS comp) {
+							
+							Query i = null;
+							
+							iniciaOperacion();
+							i = sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name = :name"); 
+						    i.setString("name", comp.getCompany_name());
+						    return (i.uniqueResult() != null);
+						}
+				
+		//borrar usuario ws - No devuelve nada 
+				
+		public void wsdelete_user(UserWS user) throws HibernateException 
+		{ 
+			User user_del = null;  
+			String i=null;
+			long id_user=0;
+					
+			 try 
+			  { 
+			       iniciaOperacion(); 
+
+			        i=  sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+user.getLogin()+"'").uniqueResult().toString();
+			 	    //una vez encontrado el id del user puedo buscarlo
+			 	    id_user= Integer.parseInt(i);
+			 	    user_del = (User) sesion.get(User.class, id_user);  	       
+			        sesion.delete(user_del); //le pasamos todo el objeto a eliminar
+			        tx.commit(); 
+			    } catch (HibernateException he) 
+			     { 
+			        manejaExcepcion(he); 
+			        throw he; 
+			     } finally 
+			     { 
+			        sesion.close(); 
+			     } 
+			  }  
+		
+		
+		//borrar compañia ws- no devuelve nada
+		public void wsdelete_company(CompanyWS company) throws HibernateException 
+		{ 
+			Company comp_del = null;  
+			String i=null;
+			long id_comp=0;
+					
+			 try 
+			  { 
+			       iniciaOperacion(); 
+
+			        i=  sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name ='"+company.getCompany_name()+"'").uniqueResult().toString();
+			 	    //una vez encontrado el id del user puedo buscarlo
+			 	    id_comp= Integer.parseInt(i);
+			 	    comp_del = (Company) sesion.get(Company.class, id_comp);  	       
+			        sesion.delete(comp_del); //le pasamos todo el objeto a eliminar
+			        tx.commit(); 
+			    } catch (HibernateException he) 
+			     { 
+			        manejaExcepcion(he); 
+			        throw he; 
+			     } finally 
+			     { 
+			        sesion.close(); 
+			     } 
+			  }
+		
+		//actualizar compañia ws- no devuelve nada
+		
+		public void wsupdate_company(CompanyWS company) throws HibernateException 
+		{ 
+			Company comp_update = null;  
+									
+			 try 
+			  { 
+			       iniciaOperacion(); 
+			       comp_update = (Company) sesion.get(Company.class,company.getId_company()); 
+			       
+			       comp_update.setAddress(company.getAddress());
+			       comp_update.setCompany_name(company.getCompany_name());
+			       comp_update.setLeader(company.getLeader());
+			       
+			       sesion.update(comp_update); //le pasamos todo el objeto a modificar
+			       tx.commit(); 
+			    } catch (HibernateException he) 
+			     { 
+			        manejaExcepcion(he); 
+			        throw he; 
+			     } finally 
+			     { 
+			        sesion.close(); 
+			     } 
+			  }
+	
+		//actualizar Usuario ws- no devuelve nada
+		
+				public void wsupdate_user(UserWS user) throws HibernateException 
+				{ 
+					User user_update = null;  
+								
+					 try 
+					  { 
+					       iniciaOperacion(); 
+					       user_update = (User) sesion.get(User.class,user.getId_user()); 
+					       
+					       
+					       //actualizo los camps de la tabla
+					       user_update.setLogin(user.getLogin());
+					       user_update.setMail(user.getLogin());
+					       user_update.setName(user.getName());
+					       user_update.setPassword(user.getPassword());;
+					       user_update.setPhone(user.getPhone());
+					       user_update.setRole(user.getRole());
+					       user_update.setDepartment(user.getDepartment());
+					       
+					       sesion.update(user_update); //le pasamos todo el objeto a modificar
+					       tx.commit(); 
+					    } catch (HibernateException he) 
+					     { 
+					        manejaExcepcion(he); 
+					        throw he; 
+					     } finally 
+					     { 
+					        sesion.close(); 
+					     } 
+					  }
 }

@@ -142,9 +142,9 @@ public class MyResource {
 		
 		//return "hellooo";
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
-		Company comp = new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
-		crud.create_company(comp);
-		return "Empresa añadida: "+comp.getCompany_name();
+		//Company comp = new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
+		crud.create_company(company);
+		return "Empresa añadida: "+company.getCompany_name();
 		
 
     }
