@@ -24,11 +24,13 @@ public class Company implements Serializable{
 	modo de recuperazión de datos lazy, los recupera cuando son necesarios, de esta manera no sobre
 	cargamos el sistema**/
 	//Relación tabla usuarios
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER,mappedBy="company")
+	@OneToMany (mappedBy="company", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	@org.hibernate.annotations.Cascade( {org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private List<User> usuarios = new ArrayList<User>();
 	
 	//relacion tabla nodos
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER,mappedBy="company")
+	@OneToMany (mappedBy="company", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+	@org.hibernate.annotations.Cascade( {org.hibernate.annotations.CascadeType.SAVE_UPDATE})
 	private List<Node> nodos = new ArrayList<Node>();
 	
 	
