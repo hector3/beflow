@@ -88,8 +88,10 @@ public class CRUD {
 	
 	//buscar usuario por el correo electronico (identificacion única de user)
 	
-	public User read_user(String mail) throws HibernateException
+	public UserWS read_user(String mail) throws HibernateException
 	{ 
+		UserWS userws=null;
+
 		User user = null;  
 		String i=null;
 		long id_user=0;
@@ -98,15 +100,18 @@ public class CRUD {
 	       iniciaOperacion(); //unique result me devuelve el objeto encontrado con dicho correo electronico
 	       
 	       i=  sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+mail+"'").uniqueResult().toString();
+	       
 	       //una vez encontrado el id del user puedo buscarlo
 	       id_user= Integer.parseInt(i);
 	       user = (User) sesion.get(User.class, id_user); 
-	     
+	       userws=new UserWS(id_user, user.getLogin(), user.getPassword(), user.getRole(), user.getName(), user.getPhone(), user.getDepartment(), user.getCompany().getCompany_name());
+	       
+	       
 	    } finally 
 	    { 
 	        sesion.close(); 
 	    }  
-	    return user; 
+	    return userws; 
 	}
 	
 	
@@ -454,7 +459,7 @@ public class CRUD {
 				
 		//borrar usuario ws - No devuelve nada 
 				
-		public void wsdelete_user(UserWS user) throws HibernateException 
+		public void wsdelete_user(String mail) throws HibernateException 
 		{ 
 			User user_del = null;  
 			String i=null;
@@ -464,7 +469,7 @@ public class CRUD {
 			  { 
 			       iniciaOperacion(); 
 
-			        i=  sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+user.getLogin()+"'").uniqueResult().toString();
+			        i=  sesion.createQuery("SELECT u.id_user FROM User u WHERE u.mail ='"+mail+"'").uniqueResult().toString();
 			 	    //una vez encontrado el id del user puedo buscarlo
 			 	    id_user= Integer.parseInt(i);
 			 	    user_del = (User) sesion.get(User.class, id_user);  	       
@@ -482,7 +487,7 @@ public class CRUD {
 		
 		
 		//borrar compañia ws- no devuelve nada
-		public void wsdelete_company(CompanyWS company) throws HibernateException 
+		public void wsdelete_company(String nameCompany) throws HibernateException 
 		{ 
 			Company comp_del = null;  
 			String i=null;
@@ -492,7 +497,7 @@ public class CRUD {
 			  { 
 			       iniciaOperacion(); 
 
-			        i=  sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name ='"+company.getCompany_name()+"'").uniqueResult().toString();
+			        i=  sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name ='"+nameCompany+"'").uniqueResult().toString();
 			 	    //una vez encontrado el id del user puedo buscarlo
 			 	    id_comp= Integer.parseInt(i);
 			 	    comp_del = (Company) sesion.get(Company.class, id_comp);  	       
