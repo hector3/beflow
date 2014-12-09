@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 /**
  * Root resource (exposed at "myresource" path)
  */
@@ -53,15 +54,37 @@ public class MyResource {
     	
     }
 	
-	@Path("/id/{idUser}")
+	@Path("/mail/{email}")
 	@GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt2(@PathParam("idUser") int idUser) throws UnknownHostException {
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getIt2(@PathParam("email") String email) throws UnknownHostException {
 		
 		
-		String mensaje="Consulta sobre el usuario con id: "+idUser;
-		return mensaje;
+		String mensaje="Consulta sobre el usuario con mail: "+email;
+		System.out.println(mensaje);
+		User user = null;
+		try{
+			user=crud.read_user(email);
+			System.out.println("Me lega el correo: "+email);
+			System.out.println("Del objeto saco departamento: "+user.getDepartment());
+			//Userws userws = new UserWS(0, user.getLogin(), user.getPassword(), user.getRole(), user.getName(), user.getPhone(), user.getDepartment(), user.getCompany());
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		String objetoEnJson;
+		try{
+			objetoEnJson=gson.toJson(user);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			
+		}
+		
+		return(objetoEnJson);
+//		return gson.toJson(user);
+		
     	
     	
     }
@@ -103,51 +126,92 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public long insertUser(String json) throws UnknownHostException{
+    public String insertUser(String json) throws UnknownHostException{
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
+		String resultado="";
+		long id=0;
+		if (crud.user_exists(user)){
+			resultado="El usuario ya existe modifícalo si así lo deseas";
+		}
+		else{
+			id=crud.wsadd_user(user);
+			resultado="Usuario añadido correctamente a la compañía: "+user.getName_company()+" con id "+ id;
+		}
 		
-		
-		/*Company comp=crud.read_company(user.getName_company());
-		System.out.println("Compañia: "+comp.getCompany_name());
-		System.out.println("Direccion: "+comp.getAddress());
-		User userH = new User(user.getLogin(),user.getPassword(),user.getRole(),user.getName(),user.getPhone(),user.getDepartment());
-		*/
-		
-		//comp.addUsuario(userH);
-		//userH.setCompany(comp);
-	  	//crud.update_company(comp);
-	  	//String resp="Usuario añadido con exito: "+user.getName();
-	  	
-		
-		//LIDIA
-		
-		
-		long id=crud.wsadd_user(user);
-		
-		return id;
-		
-		
-		
-		
-		
+		return resultado;
+	}
 
-    }
 	
+	@Path("/updateUser")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String updateUser(String json) throws UnknownHostException{
+		
+		final UserWS user = gson.fromJson(json, UserWS.class);
+		String resultado="";
+		long id=0;
+		if (crud.user_exists(user)){
+			try{
+			crud.wsupdate_user(user);			
+			resultado="El usuario ya existe y se ha modificado";
+			}catch(Exception e){
+				System.out.println("problemas.. Excepcion: "+e.getMessage());
+				resultado="Ha habido problemas";
+			}
+			
+		}
+		else{
+			
+			resultado="El usuario no existe en la base de datos. Créalo.";
+		}
+		
+		return resultado;
+	}
 	@Path("/addCompany")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public String insertCompany(String json) throws UnknownHostException{
-		
-		//return "hellooo";
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
-		//Company comp = new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
-		crud.create_company(company);
-		return "Empresa añadida: "+company.getCompany_name();
-		
-
+		String resultado= "";
+		//compruebo si la compañia existe
+		if(crud.company_exists(company)==true){
+			resultado="La compañía ya existe!!";
+			
+		}
+		else{
+			
+			long id=crud.create_company(company);
+			resultado = "La compañía es nueva y se crea con id "+id;
+		}
+		System.out.println(resultado);
+		return resultado;
     }
+	
+	@Path("/updateCompany")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String updateCompany(String json) throws UnknownHostException{
+		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
+		String resultado= "";
+		
+		try{
+			crud.wsupdate_company(company);
+			resultado="La compañía ya existe y se ha modificado";
+		}
+		catch(Exception e){
+			resultado="Problemas al actualizar compañia";
+			
+		}
+
+		System.out.println(resultado);
+		return resultado;
+    }
+	
+	
 	@Path("/delUser")
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
