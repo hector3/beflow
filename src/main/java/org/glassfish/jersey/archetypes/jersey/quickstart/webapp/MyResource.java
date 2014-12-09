@@ -54,7 +54,7 @@ public class MyResource {
     	
     }
 	
-	@Path("/mail/{email}")
+	@Path("/getUser/{email}")
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,12 +63,12 @@ public class MyResource {
 		
 		String mensaje="Consulta sobre el usuario con mail: "+email;
 		System.out.println(mensaje);
-		User user = null;
+		UserWS user = null;
 		try{
 			user=crud.read_user(email);
-			System.out.println("Me lega el correo: "+email);
-			System.out.println("Del objeto saco departamento: "+user.getDepartment());
-			//Userws userws = new UserWS(0, user.getLogin(), user.getPassword(), user.getRole(), user.getName(), user.getPhone(), user.getDepartment(), user.getCompany());
+//			System.out.println("Me lega el correo: "+email);
+//			System.out.println("Del objeto saco departamento: "+user.getDepartment());
+//			Userws userws = new UserWS(0, user.getLogin(), user.getPassword(), user.getRole(), user.getName(), user.getPhone(), user.getDepartment(), user.getCompany());
 		}
 		catch(Exception e){
 			System.out.println("problemas.. Excepcion: "+e.getMessage());
@@ -151,8 +151,8 @@ public class MyResource {
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
 		String resultado="";
-		long id=0;
-		if (crud.user_exists(user)){
+		//long id=0;
+		//if (crud.user_exists(user)){
 			try{
 			crud.wsupdate_user(user);			
 			resultado="El usuario ya existe y se ha modificado";
@@ -160,12 +160,11 @@ public class MyResource {
 				System.out.println("problemas.. Excepcion: "+e.getMessage());
 				resultado="Ha habido problemas";
 			}
+		
+		//else{
 			
-		}
-		else{
-			
-			resultado="El usuario no existe en la base de datos. Créalo.";
-		}
+		//	resultado="El usuario no existe en la base de datos. Créalo.";
+		//}
 		
 		return resultado;
 	}
@@ -212,15 +211,43 @@ public class MyResource {
     }
 	
 	
-	@Path("/delUser")
+	@Path("/delUser/{email}")
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
-    public String delUser(String s) throws UnknownHostException{
-			
-		User user=crud.read_user(s);
-		System.out.println("user eliminado: "+user.getName());
-		return ("User eliminado: ");
+    public String delUser(@PathParam("email") String email) throws UnknownHostException{
+		
+		String resultado="";
+		try{
+		crud.wsdelete_user(email);
+		resultado="Usuario eliminado OK";
+		}catch(Exception e){
+			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
+			resultado="nanai";
+		}
+		
+		return resultado;
+	
+    	
+    }
+	
+	@Path("/delCompany/{name}")
+    @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public String delCompany(@PathParam("name") String name) throws UnknownHostException{
+		
+		String resultado="";
+		try{
+		crud.wsdelete_company(name);
+		resultado="Company eliminada OK";
+		}catch(Exception e){
+			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
+			resultado="nanai";
+		}
+		
+		return resultado;
+	
     	
     }
     @PUT
