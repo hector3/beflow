@@ -1,6 +1,7 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import wsobjects.*;
 
@@ -66,9 +67,7 @@ public class MyResource {
 		UserWS user = null;
 		try{
 			user=crud.read_user(email);
-//			System.out.println("Me lega el correo: "+email);
-//			System.out.println("Del objeto saco departamento: "+user.getDepartment());
-//			Userws userws = new UserWS(0, user.getLogin(), user.getPassword(), user.getRole(), user.getName(), user.getPhone(), user.getDepartment(), user.getCompany());
+
 		}
 		catch(Exception e){
 			System.out.println("problemas.. Excepcion: "+e.getMessage());
@@ -83,40 +82,122 @@ public class MyResource {
 		}
 		
 		return(objetoEnJson);
-//		return gson.toJson(user);
+
 		
     	
     	
     }
 
+	
+	@Path("/getAllCompanies")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getallCompanies() throws UnknownHostException {
+		
+		try{
+			List<Company> lista = crud.company_list();
+			for (Company tempComp : lista) {
+				 System.out.println(tempComp.getCompany_name());
+				 System.out.println(tempComp.getLeader());
+				
+				}
+
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		String objetoEnJson;
+		try{
+			//objetoEnJson=gson.toJson(user);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			
+		}
+		
+		return("Hola");
+		//return(objetoEnJson);
+
+		
+    	
+    	
+    }
+	
+	
+	
+	@Path("/getCompany/{name}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCompany(@PathParam("name") String name) throws UnknownHostException {
+		
+		
+		String mensaje="Consulta sobre la compañia con nombre: "+name;
+		CompanyWS comp = null;
+		try{
+			//comp=crud.read_company(name);//quan modifiquis el crud s'arregla l'error
+
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		String objetoEnJson;
+		try{
+			objetoEnJson=gson.toJson(comp);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			
+		}
+		
+		return(objetoEnJson);
+
+		
+    	
+    	
+    }
+	
+	
 	@Path("/login")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String checkLogin(String json) throws UnknownHostException{
+    public int checkLogin(String json) throws UnknownHostException{
 		
-		final CredWS cred1 = gson.fromJson(json, CredWS.class);
+		final CredWS cred = gson.fromJson(json, CredWS.class);
+		int codresp=500;
+		UserWS user = null;
+		try{
+			user=crud.read_user(cred.getLogin());
+		}
+		catch(Exception e){
+			System.out.println("problemas.. O el login no existe o la base de datos está ko. Excepcion: "+e.getMessage());
+		}
 		
+		if(user!=null)
+		{
 		
-		String resp = "estoy en login";
-//		String resp="No entra a ningun if";
-//		User user=crud.read_user(cred.getLogin());
-//		if((user.getLogin()==cred.getLogin())&&(user.getPassword()==cred.getPass()))
-//			{
-//			resp="Credenciales correctas. Devuelvo una url";
-//			}
-//		else if((user.getLogin()==cred.getLogin())&&(user.getPassword()!=cred.getPass()))
-//			{
-//			resp="Credenciales incorrectas. La contraseña no es correcta pero el login si";
-//			}
-//		else
-//			{
-//			resp="Error en la consulta";
-//			}
-//		
+		if((user.getLogin().equals(cred.getLogin()))&&(user.getPassword().equals(cred.getPass())))
+			{
+			codresp=200;
+			}
+		else if((user.getLogin().equals(cred.getLogin()))&&(!user.getPassword().equals(cred.getPass())))
+			{
+			codresp=400;
+			}
+		else
+			{
+			codresp=600;
+			}
 		
+		}
 		
-		return cred1.getLogin();
+		else{
+			codresp=600;
+		}
+		
+		return codresp;
 		
 
     }	
