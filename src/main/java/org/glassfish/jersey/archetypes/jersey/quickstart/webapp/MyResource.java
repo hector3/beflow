@@ -15,6 +15,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+
+
+import javax.ws.rs.core.Response;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 /**
@@ -54,6 +58,11 @@ public class MyResource {
     	
     	
     }
+	
+	
+	
+	
+	
 	
 	@Path("/getUser/{email}")
 	@GET
@@ -95,21 +104,25 @@ public class MyResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getallCompanies() throws UnknownHostException {
 		
+		List<Company> lista = crud.company_list();
+		
 		try{
-			List<Company> lista = crud.company_list();
+			
 			for (Company tempComp : lista) {
+				
 				 System.out.println(tempComp.getCompany_name());
 				 System.out.println(tempComp.getLeader());
-				
+				 System.out.println(tempComp.getAddress());
 				}
-
 		}
+		
+		
 		catch(Exception e){
 			System.out.println("problemas.. Excepcion: "+e.getMessage());
 		}
 		String objetoEnJson;
 		try{
-			//objetoEnJson=gson.toJson(user);
+			objetoEnJson=gson.toJson(lista);
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";
@@ -117,11 +130,7 @@ public class MyResource {
 		}
 		
 		return("Hola");
-		//return(objetoEnJson);
-
-		
-    	
-    	
+		//return(objetoEnJson);	
     }
 	
 	
@@ -136,8 +145,9 @@ public class MyResource {
 		String mensaje="Consulta sobre la compañia con nombre: "+name;
 		CompanyWS comp = null;
 		try{
-			//comp=crud.read_company(name);//quan modifiquis el crud s'arregla l'error
-
+			comp=crud.wsread_company(name);//quan modifiquis el crud s'arregla l'error
+			Company com = new Company();
+			
 		}
 		catch(Exception e){
 			System.out.println("problemas.. Excepcion: "+e.getMessage());
@@ -152,12 +162,18 @@ public class MyResource {
 		}
 		
 		return(objetoEnJson);
-
+	   
+	}
 		
     	
-    	
-    }
+
 	
+	
+	
+	
+	    
+	   
+	    
 	
 	@Path("/login")
     @POST

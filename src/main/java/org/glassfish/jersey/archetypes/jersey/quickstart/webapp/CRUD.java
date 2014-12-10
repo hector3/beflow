@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 
 
 
+
 import wsobjects.*;
 
 
@@ -161,14 +162,17 @@ public class CRUD {
 	{ 
 	    long id = 0; //id de la tabla company) 
 	    Company comp= new Company(company.getCompany_name(),company.getAddress(),company.getLeader());
+	    String i=null;
 	    try 
 	    { 
 	        iniciaOperacion(); 
 	        //id= (Long) 
 	        sesion.persist(comp); //metodo para guardar cliente (del objeto hibernate.sesion) 
 	        
-	        //sesion.persist(persona1);?
-	        //sesion.persist(persona2);?
+	        i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+company.getCompany_name()+"'").uniqueResult().toString();
+		       //una vez encontrado el id del user puedo buscarlo
+		    id= Integer.parseInt(i);
+		       
 	        
 	        tx.commit(); 
 	    }catch(HibernateException he) 
@@ -241,6 +245,7 @@ public class CRUD {
 		
 		public Company read_company(String name) throws HibernateException
 		{ 
+			
 			Company comp = null;  
 			String i=null;
 			long id_company=0;
@@ -252,7 +257,7 @@ public class CRUD {
 		       //una vez encontrado el id del user puedo buscarlo
 		       id_company= Integer.parseInt(i);
 		       comp= (Company) sesion.get(Company.class, id_company); 
-		     
+		       
 		    } finally 
 		    { 
 		        sesion.close(); 
@@ -396,8 +401,12 @@ public class CRUD {
 		
 		public long wsadd_user( UserWS user)
 		{ 
-			Company compx= read_company(user.getName_company());
-		    
+			String i =null;
+			long id_company=0;
+			i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+user.getName_company()+"'").uniqueResult().toString();
+		       //una vez encontrado el id del user puedo buscarlo
+		    id_company= Integer.parseInt(i);
+		    Company compx= (Company) sesion.get(Company.class, id_company); 
 			
 			long id = 0; //id de la tabla user (único) 
 			
@@ -572,4 +581,27 @@ public class CRUD {
 					        sesion.close(); 
 					     } 
 					  }
+				
+				public CompanyWS wsread_company(String name) throws HibernateException
+				{ 
+					CompanyWS compws=null;
+					Company comp = null;  
+					String i=null;
+					long id_company=0;
+				    try 
+				    { 
+				       iniciaOperacion(); //unique result me devuelve el objeto encontrado con dicho correo electronico
+				      
+				       i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+name+"'").uniqueResult().toString();
+				       //una vez encontrado el id del user puedo buscarlo
+				       id_company= Integer.parseInt(i);
+				       comp= (Company) sesion.get(Company.class, id_company); 
+				       compws =new CompanyWS(id_company,comp.getCompany_name(),comp.getAddress(),comp.getLeader());
+				    } finally 
+				    { 
+				        sesion.close(); 
+				    }  
+				    return compws; 
+				}
+				
 }
