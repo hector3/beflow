@@ -105,11 +105,14 @@ public class MyResource {
     public String getallCompanies() throws UnknownHostException {
 		
 		List<Company> lista = crud.company_list();
-		
+		ListCompaniesWS listaws = new ListCompaniesWS();
+		CompanyWS compws=null;
 		try{
 			
 			for (Company tempComp : lista) {
 				
+				compws= new CompanyWS(0,tempComp.getCompany_name(),tempComp.getAddress(),tempComp.getLeader());
+				listaws.add(compws);
 				 System.out.println(tempComp.getCompany_name());
 				 System.out.println(tempComp.getLeader());
 				 System.out.println(tempComp.getAddress());
@@ -122,17 +125,53 @@ public class MyResource {
 		}
 		String objetoEnJson;
 		try{
-			objetoEnJson=gson.toJson(lista);
+			objetoEnJson=gson.toJson(listaws);
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";
 			
 		}
 		
-		return("Hola");
-		//return(objetoEnJson);	
+		//return("Hola");
+		return(objetoEnJson);	
     }
 	
+	@Path("/getUsersFromCompany/{company}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUsersFromCompany(@PathParam("company") String comp) throws UnknownHostException {
+		
+		Company compObject = null;
+		List <String> listaUsersMail = null;
+		try{
+			
+	        compObject=crud.read_company(comp);
+	        			
+			for (User tempUser : compObject.getUsuarios()) {
+				listaUsersMail.add(tempUser.getLogin());
+				System.out.println("Usuario: "+tempUser.getLogin());
+				
+				}
+		}
+		
+		
+		catch(Exception e){
+			
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		String objetoEnJson;
+		try{
+			objetoEnJson=gson.toJson(listaUsersMail);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			
+		}
+		
+		//return("Hola");
+		return(objetoEnJson);	
+    }
 	
 	
 	@Path("/getCompany/{name}")
@@ -146,7 +185,7 @@ public class MyResource {
 		CompanyWS comp = null;
 		try{
 			comp=crud.wsread_company(name);//quan modifiquis el crud s'arregla l'error
-			Company com = new Company();
+			
 			
 		}
 		catch(Exception e){
@@ -340,7 +379,7 @@ public class MyResource {
 		resultado="Company eliminada OK";
 		}catch(Exception e){
 			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
-			resultado="nanai";
+			resultado="Problemoooooo... Excepcion: "+e.getMessage();
 		}
 		
 		return resultado;
