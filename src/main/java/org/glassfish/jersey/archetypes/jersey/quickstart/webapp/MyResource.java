@@ -1,6 +1,7 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import wsobjects.*;
@@ -90,11 +91,7 @@ public class MyResource {
 			
 		}
 		
-		return(objetoEnJson);
-
-		
-    	
-    	
+		return(objetoEnJson);    	
     }
 
 	
@@ -106,30 +103,13 @@ public class MyResource {
 		
 		List<Company> lista = crud.company_list();
 		ListCompaniesWS listaws = new ListCompaniesWS();
-		CompanyWS compws=null;
-		try{
-			
-			for (Company tempComp : lista) {
-				
-				compws= new CompanyWS(0,tempComp.getCompany_name(),tempComp.getAddress(),tempComp.getLeader());
-				listaws.add(compws);
-				 System.out.println(tempComp.getCompany_name());
-				 System.out.println(tempComp.getLeader());
-				 System.out.println(tempComp.getAddress());
-				}
-		}
 		
-		
-		catch(Exception e){
-			System.out.println("problemas.. Excepcion: "+e.getMessage());
-		}
 		String objetoEnJson;
 		try{
-			objetoEnJson=gson.toJson(listaws);
+			objetoEnJson=gson.toJson(listaws.getList(lista));
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
-			objetoEnJson="error";
-			
+			objetoEnJson="error";		
 		}
 		
 		//return("Hola");
@@ -142,27 +122,14 @@ public class MyResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getUsersFromCompany(@PathParam("company") String comp) throws UnknownHostException {
 		
-		Company compObject = null;
-		List <String> listaUsersMail = null;
-		try{
-			
-	        compObject=crud.read_company(comp);
-	        			
-			for (User tempUser : compObject.getUsuarios()) {
-				listaUsersMail.add(tempUser.getLogin());
-				System.out.println("Usuario: "+tempUser.getLogin());
-				
-				}
-		}
+		List<User> lista = crud.wsuser_list(comp);
 		
-		
-		catch(Exception e){
+		ListUsersFromCompany listaws = new ListUsersFromCompany();
 			
-			System.out.println("problemas.. Excepcion: "+e.getMessage());
-		}
+		
 		String objetoEnJson;
 		try{
-			objetoEnJson=gson.toJson(listaUsersMail);
+			objetoEnJson=gson.toJson(listaws.getList(lista));
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";

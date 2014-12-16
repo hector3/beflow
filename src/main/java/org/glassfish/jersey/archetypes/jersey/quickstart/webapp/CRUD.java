@@ -1,11 +1,14 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+
 
 
 
@@ -603,5 +606,37 @@ public class CRUD {
 				    }  
 				    return compws; 
 				}
+				
+				public List<User> wsuser_list(String name) throws HibernateException 
+				{ 
+					String i =null;
+					long id_company=0;
+					List <User> Lista_usuarios = null;  
+					List<User> users=new ArrayList<User>();
+				    
+				    try 
+				    { 
+				        iniciaOperacion(); //IMPORTANTE la query: se pide la clase realmnete Cliente! no la tabla que se ha creado
+				       
+				        i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+name+"'").uniqueResult().toString();
+					       //una vez encontrado el id del user puedo buscarlo
+					    id_company= Integer.parseInt(i);
+					    Company compx= (Company) sesion.get(Company.class, id_company); 
+					    Lista_usuarios=compx.getUsuarios();
+					    
+					    users.addAll(Lista_usuarios);
+					    
+						for (User tempUser : Lista_usuarios) {
+							//para cargar todos los objetos de user
+							}
+				     
+				    }finally 
+				    { 
+				        sesion.close(); 
+				    }  
+				    return users;//Lista_usuarios; 
+				}
+				
+				
 				
 }
