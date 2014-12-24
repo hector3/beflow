@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wsobjects.*;
+import controller.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,6 +16,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 
@@ -25,12 +29,16 @@ import com.google.gson.GsonBuilder;
 /**
  * Root resource (exposed at "myresource" path)
  */
+
+
 @Path("/myresource")
 public class MyResource {
-	
+	final String origen="http://*";	
 	
 	CRUD crud=new CRUD();
 	Gson gson = new Gson();
+	LibSuport ls=new LibSuport();
+	Response response=null;
 	
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -69,9 +77,9 @@ public class MyResource {
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getIt2(@PathParam("email") String email) throws UnknownHostException {
+    public Response getIt2(@PathParam("email") String email) throws UnknownHostException {
 		
-		
+
 		String mensaje="Consulta sobre el usuario con mail: "+email;
 		System.out.println(mensaje);
 		UserWS user = null;
@@ -85,13 +93,15 @@ public class MyResource {
 		String objetoEnJson;
 		try{
 			objetoEnJson=gson.toJson(user);
+			response = ls.genResponse(objetoEnJson);
+			
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";
 			
 		}
 		
-		return(objetoEnJson);    	
+		return(response);    	
     }
 
 	
@@ -99,28 +109,35 @@ public class MyResource {
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getallCompanies() throws UnknownHostException {
-		
+    public Response getallCompanies() throws UnknownHostException {
+
 		List<Company> lista = crud.company_list();
 		ListCompaniesWS listaws = new ListCompaniesWS();
 		
 		String objetoEnJson;
 		try{
 			objetoEnJson=gson.toJson(listaws.getList(lista));
+			response = ls.genResponse(objetoEnJson);
+			//response.setHeader("Content-Type", "application/json");
+//			response = Response.status(200).
+//	        entity(objetoEnJson).
+//	        header("Access-Control-Allow-Origin", "*").build();
+
+			
+			
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";		
 		}
-		
-		//return("Hola");
-		return(objetoEnJson);	
+		System.out.println(response.toString());
+		return(response);	
     }
 	
 	@Path("/getUsersFromCompany/{company}")
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsersFromCompany(@PathParam("company") String comp) throws UnknownHostException {
+    public Response getUsersFromCompany(@PathParam("company") String comp) throws UnknownHostException {
 		
 		List<User> lista = crud.wsuser_list(comp);
 		
@@ -130,6 +147,7 @@ public class MyResource {
 		String objetoEnJson;
 		try{
 			objetoEnJson=gson.toJson(listaws.getList(lista));
+			response = ls.genResponse(objetoEnJson);
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";
@@ -137,7 +155,7 @@ public class MyResource {
 		}
 		
 		//return("Hola");
-		return(objetoEnJson);	
+		return(response);	
     }
 	
 	
@@ -145,7 +163,7 @@ public class MyResource {
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCompany(@PathParam("name") String name) throws UnknownHostException {
+    public Response getCompany(@PathParam("name") String name) throws UnknownHostException {
 		
 		
 		String mensaje="Consulta sobre la compañia con nombre: "+name;
@@ -161,13 +179,14 @@ public class MyResource {
 		String objetoEnJson;
 		try{
 			objetoEnJson=gson.toJson(comp);
+			response = ls.genResponse(objetoEnJson);
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
 			objetoEnJson="error";
 			
 		}
 		
-		return(objetoEnJson);
+		return(response);
 	   
 	}
 		
