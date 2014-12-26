@@ -3,30 +3,30 @@ package wsPojoController;
 public class tailNodeConnector {
 
 	
-	node node;
-	String id;
+	node nodeTail;
+	String idIntTail;
 
 	
 	public tailNodeConnector(node node, String id) {
-		this.node = node;
-		this.id = id;
+		this.nodeTail = node;
+		this.idIntTail = id;
 
 	}
 
 	public node getNode() {
-		return node;
+		return nodeTail;
 	}
 
 	public void setNode(node node) {
-		this.node = node;
+		this.nodeTail = node;
 	}
 
 	public String getId() {
-		return id;
+		return idIntTail;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.idIntTail = id;
 	}
 
 
