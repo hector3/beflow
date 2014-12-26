@@ -1,28 +1,28 @@
 package wsPojoController;
 
 public class headNodeConnector {
-	node node;
-	String idInt;
+	node nodeHead;
+	String idIntHead;
 	
 	public headNodeConnector(node node, String id) {
-		this.node = node;
-		this.idInt = id;
+		this.nodeHead = node;
+		this.idIntHead = id;
 
 	}
 
 	public node getNode() {
-		return node;
+		return nodeHead;
 	}
 
 	public void setNode(node node) {
-		this.node = node;
+		this.nodeHead = node;
 	}
 
 	public String getId() {
-		return idInt;
+		return idIntHead;
 	}
 
 	public void setId(String id) {
-		this.idInt = id;
+		this.idIntHead = id;
 	}
 }
