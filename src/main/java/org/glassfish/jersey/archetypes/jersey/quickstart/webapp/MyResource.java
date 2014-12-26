@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import wsPojoController.WSListObjects;
 import wsobjects.*;
 import controller.*;
 
@@ -23,6 +24,8 @@ import javax.ws.rs.core.MediaType;
 
 
 import javax.ws.rs.core.Response;
+
+import pojoController.ListEdgeProperties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -379,4 +382,43 @@ public class MyResource {
 
     	
     }
+    
+    /**************************CONTROLLER***************************************/
+    
+	@Path("/getInfoController")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInfoController() throws UnknownHostException {
+		//recuperar el bjeto y serializarlo
+		ListEdgeProperties lep = ls.creaObjetoTest();
+
+		String objetoEnJson;
+		objetoEnJson = gson.toJson(lep);
+		System.out.println(objetoEnJson);
+		WSListObjects wslo = lep.genListPurged();
+		
+		try{
+			objetoEnJson = gson.toJson(wslo);
+			System.out.println(objetoEnJson);
+			response = ls.genResponse(objetoEnJson);
+			
+			//response.setHeader("Content-Type", "application/json");
+//			response = Response.status(200).
+//	        entity(objetoEnJson).
+//	        header("Access-Control-Allow-Origin", "*").build();
+
+			
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
+   
+    
+    
 }
