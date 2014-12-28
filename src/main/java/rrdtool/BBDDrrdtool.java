@@ -81,7 +81,7 @@ public class BBDDrrdtool {
 	//RDD flujos
 		public void createflowBBDD( String name_flow, long date) throws IOException{//date = Util.getTime
 			
-			
+			//coment
 			RrdDef rrdDef = new RrdDef("./"+name_flow+".rrd");//creo un fichero rrd, con el nombre de switch
 	        rrdDef.setStep(300);//Le indico que los datos seran act cada 5 min
 	        rrdDef.setStartTime(date);//En que momento empieza a actualizar datos
