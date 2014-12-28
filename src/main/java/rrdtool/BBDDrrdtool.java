@@ -47,7 +47,7 @@ public class BBDDrrdtool {
 	}
 	
 	
-	//RDD Puertos
+	//RDD Puertos buenos
 	public void createportBBDD( String name_port, long date) throws IOException{//date = Util.getTime
 		
 		
