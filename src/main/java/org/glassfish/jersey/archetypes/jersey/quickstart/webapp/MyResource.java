@@ -64,7 +64,6 @@ public class MyResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getItest() throws UnknownHostException {
 		
-		
 
 		return "Hello jersey";
     	

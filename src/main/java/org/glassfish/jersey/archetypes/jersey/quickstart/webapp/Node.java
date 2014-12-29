@@ -11,7 +11,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name="Nodes")
+@Table(name="nodes")
 
 public class Node implements Serializable{
 	
