@@ -51,6 +51,7 @@ public class MyResource {
      * @throws UnknownHostException 
      */
 	
+	
     
 	/*
 	 * 
@@ -58,13 +59,17 @@ public class MyResource {
 	 * 
 	 */
 	
+	
+	
+	
+	
 
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String getItest() throws UnknownHostException {
 		
-
+		
 		return "Hello jersey";
     	
     	
