@@ -3,6 +3,10 @@ package controller;
 import javax.ws.rs.core.Response;
 
 import pojoController.*;
+import pojoStats.ListPortStatistic;
+import pojoStats.ListPortStatistics;
+import pojoStats.portStatistic;
+import pojoStats.portStatistics;
 
 
 
@@ -44,6 +48,21 @@ public class LibSuport {
 		return listEdgeProperties;
 		
 	}
+	/*
+	public ListPortStatistics creaListTest(){
+		pojoStats.node node =new pojoStats.node("String1","String2");
+		pojoStats.nodeConnector nodeConnector= new pojoStats.nodeConnector(node, "xxx", "xxx");
+		pojoStats.portStatistic portStatistic = new pojoStats.portStatistic(nodeConnector, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2);
+		ListPortStatistic lpe = new ListPortStatistic();
+		lpe.addPortStat(portStatistic);
+		lpe.addPortStat(portStatistic);
+		pojoStats.node node2 =new pojoStats.node("String3","String4");
+		portStatistics portStatistics = new portStatistics(node2, lpe);
+		
+		
+		return null;
+		
+	}
 
-	
+	*/
 }

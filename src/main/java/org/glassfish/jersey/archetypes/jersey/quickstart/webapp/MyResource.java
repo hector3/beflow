@@ -1,10 +1,14 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
+import httpclient.HttpCliente;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import wsPojoController.WSListObjects;
+import wsPojoStats.ListWsStats;
+import wsPojoStats.WsObjectStats;
 import wsobjects.*;
 import controller.*;
 
@@ -26,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import pojoController.ListEdgeProperties;
+import pojoStats.ListPortStatistics;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,6 +47,7 @@ public class MyResource {
 	Gson gson = new Gson();
 	LibSuport ls=new LibSuport();
 	Response response=null;
+	HttpCliente httpcliente= new HttpCliente();
 	
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -394,24 +400,16 @@ public class MyResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getInfoController() throws UnknownHostException {
-		//recuperar el bjeto y serializarlo
-		ListEdgeProperties lep = ls.creaObjetoTest();
-
-		String objetoEnJson;
-		objetoEnJson = gson.toJson(lep);
-		System.out.println(objetoEnJson);
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		String objetoEnJson=httpcliente.getNodes();
+		final ListEdgeProperties lep = gson.fromJson(objetoEnJson, ListEdgeProperties.class);
+		//objetoEnJson = gson.toJson(lep);
 		WSListObjects wslo = lep.genListPurged();
-		
 		try{
 			objetoEnJson = gson.toJson(wslo);
 			System.out.println(objetoEnJson);
 			response = ls.genResponse(objetoEnJson);
-			
-			//response.setHeader("Content-Type", "application/json");
-//			response = Response.status(200).
-//	        entity(objetoEnJson).
-//	        header("Access-Control-Allow-Origin", "*").build();
-
 			
 			
 		}catch(Exception e){
@@ -422,7 +420,39 @@ public class MyResource {
 		System.out.println(response.toString());
 		return(response);	
     }
-   
+
+	@Path("/getStatsController")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatiscticsController() throws UnknownHostException {
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		String objetoEnJson=httpcliente.getStatistics();
+		
+		//
+		////WSListObjects wslo = lep.genListPurged();
+		try{
+			
+			final ListPortStatistics lps = gson.fromJson(objetoEnJson, ListPortStatistics.class);
+			objetoEnJson = gson.toJson(lps.genListPurged());
+			response = ls.genResponse(objetoEnJson);
+			//
+			/*
+			objetoEnJson = gson.toJson(wslo);
+			System.out.println(objetoEnJson);
+			response = ls.genResponse(objetoEnJson);
+			*/
+			
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
     
     
 }
