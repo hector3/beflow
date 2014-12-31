@@ -316,16 +316,16 @@ public class CRUD {
 		
 		//buscar nombre del nodo por mac y puerto
 		
-		public String read_node(String MAC, String port_number) throws HibernateException
+		public String read_node(NodeWS node) throws HibernateException
 		{ 
-			User user = null;  
+			
 			String i=null;
-			long id_user=0;
+			
 		    try 
 		    { 
 		       iniciaOperacion(); //unique result me devuelve el objeto encontrado con dicho correo electronico
 		       
-		       i=  (String) sesion.createQuery("SELECT u.node_name FROM Node u WHERE u.MAC_address ='"+MAC+"' and u.port_number ='"+port_number+"'").uniqueResult();
+		       i=  (String) sesion.createQuery("SELECT u.node_name FROM Node u WHERE u.MAC_address ='"+node.getMAC_address()+"' and u.port_number ='"+node.getPort_number()+"'").uniqueResult();
 		       //una vez encontrado el id del user puedo buscarlo
 		       //id_user= Integer.parseInt(i);
 		       //user = (User) sesion.get(User.class, id_user); 
@@ -336,6 +336,9 @@ public class CRUD {
 		    }  
 		    return i; 
 		}
+		
+		
+		
 		
 		//buscar nombre del nodo por mac y puerto y retorna el nodo
 		
@@ -404,12 +407,6 @@ public class CRUD {
 		
 		public long wsadd_user( UserWS user)
 		{ 
-			String i =null;
-			long id_company=0;
-			i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+user.getName_company()+"'").uniqueResult().toString();
-		       //una vez encontrado el id del user puedo buscarlo
-		    id_company= Integer.parseInt(i);
-		    Company compx= (Company) sesion.get(Company.class, id_company); 
 			
 			long id = 0; //id de la tabla user (único) 
 			
@@ -426,7 +423,7 @@ public class CRUD {
 		        Company x = (Company) sesion.load(Company.class, id);
 		        x.addUsuario(userH);
 		      
-			    userH.setCompany(compx);
+			    userH.setCompany(x);
 		     
 		        //sesion.update(compx);
 		        
@@ -638,5 +635,174 @@ public class CRUD {
 				}
 				
 				
+				//Add a Node of a company
+				
+				public long wsadd_node(NodeWS node)
+				{ 
+					
+					
+					long id = 0; //id de la tabla user (único) 
+				    Node nodeC = new Node(node.getNode_name(),node.getMAC_address(),node.getPort_number());
+				    
+				    //User cliente1 = new User("luis.ortega@gmail.com", "gutie33", 1, "Luis","677899876", "Informatica"); 
+				    
+				    try 
+				    { 
+				        iniciaOperacion(); 
+				       
+				        id= (Long) sesion.createQuery("SELECT u.id_company FROM Company u WHERE u.company_name ='"+node.getName_company()+"'").uniqueResult();
+				        Company x = (Company) sesion.load(Company.class, id);
+				        x.addNodo(nodeC);
+				      
+					    nodeC.setCompany(x);
+				     
+				        //sesion.update(compx);
+				        
+				        
+				        //metodo para guardar cliente (del objeto hibernate.sesion) 
+				        tx.commit(); 
+				    }catch(HibernateException he) 
+				    { 
+				        manejaExcepcion(he);
+				        throw he; 
+				    }finally 
+				    { 
+				    	//Busqueda del id con qu elo ha introducido a la BBDD
+				    	id= (Long) sesion.createQuery("SELECT u.id_node FROM Node u WHERE u.node_name ='"+node.getNode_name()+"'").uniqueResult();
+				        sesion.close(); 
+				    }  
+				    return id; 
+				}
+				
+				//busqueda de si el nodo existe para creacion de nodo
+				public Boolean node_exists (NodeWS node) {
+					
+					Query i = null;
+					
+					iniciaOperacion();
+					i = sesion.createQuery("SELECT u.id_node FROM Node u WHERE u.node_name = :seu"); 
+				    i.setString("seu", node.getNode_name());
+				    
+				    return (i.uniqueResult() != null);
+				}
+				
+				
+				//borrar nodo ws - No devuelve nada 
+				
+				public void wsdelete_node(String name) throws HibernateException 
+				{ 
+					Node node_del = null;  
+					String i=null;
+					long id_node=0;
+							
+					 try 
+					  { 
+					       iniciaOperacion(); 
+
+					        i=  sesion.createQuery("SELECT u.id_node FROM Node u WHERE u.node_name ='"+name+"'").uniqueResult().toString();
+					 	    //una vez encontrado el id del user puedo buscarlo
+					 	    id_node= Integer.parseInt(i);
+					 	    node_del = (Node) sesion.get(Node.class, id_node);  	       
+					        sesion.delete(node_del); //le pasamos todo el objeto a eliminar
+					        tx.commit(); 
+					    } catch (HibernateException he) 
+					     { 
+					        manejaExcepcion(he); 
+					        throw he; 
+					     } finally 
+					     { 
+					        sesion.close(); 
+					     } 
+					  }  
+				
+				//actualizar Usuario ws- no devuelve nada
+				
+				public void wsupdate_node(NodeWS node) throws HibernateException 
+				{ 
+					Node node_update = null;  
+								
+					 try 
+					  { 
+					       iniciaOperacion(); 
+					       node_update = (Node) sesion.get(Node.class,node.getId_node()); 
+					       
+					       
+					       //actualizo los camps de la tabla
+					       node_update.setMAC_address(node.getMAC_address());
+					       node_update.setNode_name(node.getNode_name());
+					       node_update.setPort_number(node.getPort_number());
+					       
+					       
+					       sesion.update(node_update); //le pasamos todo el objeto a modificar
+					       tx.commit(); 
+					    } catch (HibernateException he) 
+					     { 
+					        manejaExcepcion(he); 
+					        throw he; 
+					     } finally 
+					     { 
+					        sesion.close(); 
+					     } 
+					  }
+				
+				//buscar nodeo por su nombre (identificacion única de user)
+				
+				public NodeWS wsread_node(String name) throws HibernateException
+				{ 
+					NodeWS nodews=null;
+
+					Node node = null;  
+					String i=null;
+					long id_node=0;
+				    try 
+				    { 
+				       iniciaOperacion(); //unique result me devuelve el objeto encontrado con dicho correo electronico
+				       
+				       i=  sesion.createQuery("SELECT u.id_node FROM Node u WHERE u.node_name ='"+name+"'").uniqueResult().toString();
+				       
+				       //una vez encontrado el id del user puedo buscarlo
+				       id_node= Integer.parseInt(i);
+				       node = (Node) sesion.get(Node.class, id_node); 
+				       nodews=new NodeWS(id_node, node.getNode_name(),node.getMAC_address(),node.getPort_number(), node.getCompany().getCompany_name());
+				       
+				       
+				    } finally 
+				    { 
+				        sesion.close(); 
+				    }  
+				    return nodews; 
+				}
+				
+				//retorna lista de nodos de una compañia
+				
+				public List<Node> wsnode_list(String name) throws HibernateException 
+				{ 
+					String i =null;
+					long id_company=0;
+					List <Node> Lista_nodos = null;  
+					List <Node> nodes=new ArrayList<Node>();
+				    
+				    try 
+				    { 
+				        iniciaOperacion(); //IMPORTANTE la query: se pide la clase realmnete Cliente! no la tabla que se ha creado
+				       
+				        i=  sesion.createQuery("SELECT c.id_company FROM Company c WHERE c.company_name ='"+name+"'").uniqueResult().toString();
+					       //una vez encontrado el id del user puedo buscarlo
+					    id_company= Integer.parseInt(i);
+					    Company compx= (Company) sesion.get(Company.class, id_company); 
+					    Lista_nodos=compx.getNodes();
+					    
+					    nodes.addAll(Lista_nodos);
+					    
+						for (Node tempUser : Lista_nodos) {
+							//para cargar todos los objetos de user
+							}
+				     
+				    }finally 
+				    { 
+				        sesion.close(); 
+				    }  
+				    return nodes;//Lista_nodos en arraylist; 
+				}
 				
 }

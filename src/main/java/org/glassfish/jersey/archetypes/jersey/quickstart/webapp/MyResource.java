@@ -51,12 +51,17 @@ public class MyResource {
      * @throws UnknownHostException 
      */
 	
+	
     
 	/*
 	 * 
 	 * ruta para acceder http://localhost:8000/jersey-quickstart-webapp/beflow/myresource
 	 * 
 	 */
+	
+	
+	
+	
 	
 
 	@GET
@@ -65,7 +70,6 @@ public class MyResource {
     public String getItest() throws UnknownHostException {
 		
 		
-
 		return "Hello jersey";
     	
     	
