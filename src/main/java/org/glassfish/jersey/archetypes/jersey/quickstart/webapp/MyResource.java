@@ -437,13 +437,6 @@ public class MyResource {
 			final ListPortStatistics lps = gson.fromJson(objetoEnJson, ListPortStatistics.class);
 			objetoEnJson = gson.toJson(lps.genListPurged());
 			response = ls.genResponse(objetoEnJson);
-			//
-			/*
-			objetoEnJson = gson.toJson(wslo);
-			System.out.println(objetoEnJson);
-			response = ls.genResponse(objetoEnJson);
-			*/
-			
 			
 		}catch(Exception e){
 			System.out.println("problema con GSON, excepción: "+e.getMessage());
@@ -454,5 +447,137 @@ public class MyResource {
 		return(response);	
     }
     
-    
+/*********************************NODES******************************************/
+	
+	@Path("/addNode")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response insertNode(String json) throws UnknownHostException{
+		System.out.println(json);
+		String resultado= "";
+		try{
+			final NodeWS node = gson.fromJson(json, NodeWS.class);
+			
+			//compruebo si la compañia existe
+			if(crud.node_exists(node)==true){
+				resultado="El Nodo ya existe!!";
+				response = ls.genResponse(resultado);
+				
+			}
+			else{
+				
+				long id=crud.wsadd_node(node);
+				resultado = "Nodo creado con éxito con id: "+id;
+				response = ls.genResponse(resultado);
+			}
+		}catch(Exception e){
+			
+			System.out.println("Oh Oh .. problema.. Excepción: "+e.getMessage());
+			//response = ls.genResponse(e.getMessage());
+			
+		}
+		
+		System.out.println(resultado);
+		return response;
+		
+	}
+
+	@Path("/updateNode")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateNode(String json) throws UnknownHostException{
+		final NodeWS node = gson.fromJson(json, NodeWS.class);
+		String resultado= "";
+		
+		try{
+			crud.wsupdate_node(node);
+			resultado="El nodo existe y se ha modificado";
+			response=ls.genResponse(resultado);
+		}
+		catch(Exception e){
+			resultado="Problemas al actualizar nodo";
+			response=ls.genResponse(resultado);
+			
+		}
+
+		System.out.println(resultado);
+		return response;
+    }
+
+	@Path("/delNode/{name}")
+    @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response delNode(@PathParam("name") String name) throws UnknownHostException{
+		
+		String resultado="";
+		try{
+			crud.wsdelete_node(name);
+			resultado="Nodo eliminado OK";
+			response=ls.genResponse(resultado);
+		}catch(Exception e){
+			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
+			resultado="Problema al eliminar el nodo. Excepción: "+e.getMessage();
+			response=ls.genResponse(resultado);
+		}
+		
+		return response;
+	
+    	
+    }
+
+	@Path("/getNodeByName/{name}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNodeByName(@PathParam("name") String name) throws UnknownHostException {
+		String objetoEnJson;
+		
+		try{
+			NodeWS node = null;
+			node=crud.wsread_node(name);
+			objetoEnJson=gson.toJson(node);
+			response = ls.genResponse(objetoEnJson);			
+			
+		}
+		catch(Exception e){
+			System.out.println("problema en crud.wsread_node.. Excepcion: "+e.getMessage());
+			objetoEnJson="problema con GSON, excepción: "+e.getMessage();
+			response = ls.genResponse(objetoEnJson);
+		}
+		
+		
+		return response;
+	   
+	}
+	
+	@Path("/getNodesFromCompany/{company}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNodesFromCompany(@PathParam("company") String comp) throws UnknownHostException {
+		
+		
+		
+		ListNodesFromCompany listaws = new ListNodesFromCompany();
+			
+		
+		String objetoEnJson;
+		try{
+			List<Node> lista = crud.wsnode_list(comp);
+			objetoEnJson=gson.toJson(listaws.getList(lista));
+			response = ls.genResponse(objetoEnJson);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response=ls.genResponse(objetoEnJson);
+			
+		}
+		
+		return(response);	
+    }
+
+
 }
