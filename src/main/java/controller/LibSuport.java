@@ -29,6 +29,16 @@ public class LibSuport {
 		
 	}
 	
+	public Response genResponseInt(int json){
+		
+		response = Response.status(200).
+		entity(json).
+		header("Access-Control-Allow-Origin", "*").build();
+		
+		
+		return response;
+		
+	}	
 	public ListEdgeProperties creaObjetoTest(){
 		
 		config cnf = new config(2);

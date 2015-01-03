@@ -217,7 +217,7 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public int checkLogin(String json) throws UnknownHostException{
+    public Response checkLogin(String json) throws UnknownHostException{
 		
 		final CredWS cred = gson.fromJson(json, CredWS.class);
 		int codresp=500;
@@ -250,8 +250,10 @@ public class MyResource {
 		else{
 			codresp=600;
 		}
+		response=ls.genResponseInt(codresp);
 		
-		return codresp;
+		
+		return response;
 		
 
     }	
@@ -261,20 +263,22 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertUser(String json) throws UnknownHostException{
+    public Response insertUser(String json) throws UnknownHostException{
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
 		String resultado="";
 		long id=0;
 		if (crud.user_exists(user)){
 			resultado="El usuario ya existe modifícalo si así lo deseas";
+			response=ls.genResponse(resultado);
 		}
 		else{
 			id=crud.wsadd_user(user);
 			resultado="Usuario añadido correctamente a la compañía: "+user.getName_company()+" con id "+ id;
+			response=ls.genResponse(resultado);
 		}
 		
-		return resultado;
+		return response;
 	}
 
 	
@@ -282,7 +286,7 @@ public class MyResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String updateUser(String json) throws UnknownHostException{
+    public Response updateUser(String json) throws UnknownHostException{
 		
 		final UserWS user = gson.fromJson(json, UserWS.class);
 		String resultado="";
@@ -291,9 +295,11 @@ public class MyResource {
 			try{
 			crud.wsupdate_user(user);			
 			resultado="El usuario ya existe y se ha modificado";
+			response=ls.genResponse(resultado);
 			}catch(Exception e){
 				System.out.println("problemas.. Excepcion: "+e.getMessage());
 				resultado="Ha habido problemas";
+				response=ls.genResponse(resultado);
 			}
 		
 		//else{
@@ -301,48 +307,52 @@ public class MyResource {
 		//	resultado="El usuario no existe en la base de datos. Créalo.";
 		//}
 		
-		return resultado;
+		return response;
 	}
 	@Path("/addCompany")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String insertCompany(String json) throws UnknownHostException{
+    public Response insertCompany(String json) throws UnknownHostException{
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
 		String resultado= "";
 		//compruebo si la compañia existe
 		if(crud.company_exists(company)==true){
 			resultado="La compañía ya existe!!";
+			response=ls.genResponse(resultado);
 			
 		}
 		else{
 			
 			long id=crud.create_company(company);
 			resultado = "La compañía es nueva y se crea con id "+id;
+			response=ls.genResponse(resultado);
 		}
 		System.out.println(resultado);
-		return resultado;
+		return response;
     }
 	
 	@Path("/updateCompany")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String updateCompany(String json) throws UnknownHostException{
+    public Response updateCompany(String json) throws UnknownHostException{
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
 		String resultado= "";
 		
 		try{
 			crud.wsupdate_company(company);
 			resultado="La compañía ya existe y se ha modificado";
+			response=ls.genResponse(resultado);
 		}
 		catch(Exception e){
 			resultado="Problemas al actualizar compañia";
+			response=ls.genResponse(resultado);
 			
 		}
 
 		System.out.println(resultado);
-		return resultado;
+		return response;
     }
 	
 	
@@ -350,18 +360,21 @@ public class MyResource {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
-    public String delUser(@PathParam("email") String email) throws UnknownHostException{
+    public Response delUser(@PathParam("email") String email) throws UnknownHostException{
 		
 		String resultado="";
 		try{
 		crud.wsdelete_user(email);
 		resultado="Usuario eliminado OK";
+		response=ls.genResponse(resultado);
+		
 		}catch(Exception e){
 			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
-			resultado="nanai";
+			resultado = ("Problemas al eliminar usuario. Excepción: "+e.getMessage());
+			response=ls.genResponse(resultado);
 		}
 		
-		return resultado;
+		return response;
 	
     	
     }
@@ -370,18 +383,20 @@ public class MyResource {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
-    public String delCompany(@PathParam("name") String name) throws UnknownHostException{
+    public Response delCompany(@PathParam("name") String name) throws UnknownHostException{
 		
 		String resultado="";
 		try{
 		crud.wsdelete_company(name);
 		resultado="Company eliminada OK";
+		response=ls.genResponse(resultado);
 		}catch(Exception e){
 			System.out.println("Problemoooooo... Excepcion: "+e.getMessage());
-			resultado="Problemoooooo... Excepcion: "+e.getMessage();
+			resultado = ("Problemas al eliminar company. Excepción: "+e.getMessage());
+			response=ls.genResponse(resultado);
 		}
 		
-		return resultado;
+		return response;
 	
     	
     }
