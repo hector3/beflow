@@ -12,6 +12,10 @@ import wsPojoStats.WsObjectStats;
 import wsobjects.*;
 import controller.*;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,12 +35,16 @@ import javax.ws.rs.core.Response;
 
 import pojoController.ListEdgeProperties;
 import pojoStats.ListPortStatistics;
+import rrdtool.Servlet2;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 /**
  * Root resource (exposed at "myresource" path)
  */
+
+
 
 
 @Path("/myresource")
@@ -48,6 +56,10 @@ public class MyResource {
 	LibSuport ls=new LibSuport();
 	Response response=null;
 	HttpCliente httpcliente= new HttpCliente();
+	Servlet2 x = new Servlet2();
+	
+	// change your request and response accordingly
+
 	
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -76,15 +88,12 @@ public class MyResource {
     public String getItest() throws UnknownHostException {
 		
 		
-		return "Hello jersey";
-    	
-    	
+		
+		
+		return "Hello jersey";	
     }
 	
-	
-	
-	
-	
+		
 	
 	@Path("/getUser/{email}")
 	@GET
