@@ -20,14 +20,15 @@ public class RRDThread implements Runnable{
 		
 		
 		
-		System.out.println("Thread");
+		System.out.println("Recogiendo estadísticas.. De momento no hace nada a la espera de que se levante el servidor que aloja el controller");
 	}
 	
 	
 	//metodo que retorna stadisticas en un objeto
 	
 	public ListPortStatistics getPortStatistics(){
-		
+		//******************Ho farem quan tinguem connexió amb el controller**//
+		/*
 		Gson gson = new Gson();
 		HttpCliente http = new HttpCliente();
 		String json=http.getStatistics();
@@ -41,6 +42,8 @@ public class RRDThread implements Runnable{
 			//System.out.println(p.getNode());
 		}
 		return lps;
+		*/
+		return null;
 	}
 	//el thread se ejecutara cada 30 segundos
 	public void run() {
@@ -50,10 +53,11 @@ public class RRDThread implements Runnable{
 
 				getStatistics();//recojo estadisticas
 				Thread.sleep(5000);//milisegundos
+				System.out.println("Estoy dentro del run");
 				
 			} catch (InterruptedException e) {
 				// Se ha interrumpido el thread
-				
+				System.out.println("Thread interrumpido. Excepción: "+e.getMessage());
 			}
 		}
 			
