@@ -2,6 +2,7 @@ package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
 import httpclient.HttpCliente;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import javax.ws.rs.core.Response;
 
 import pojoController.ListEdgeProperties;
 import pojoStats.ListPortStatistics;
+import rrdtool.BBDDrrdtool;
 import rrdtool.Servlet2;
 
 import com.google.gson.Gson;
@@ -89,8 +91,7 @@ public class MyResource {
 		
 		
 		
-		
-		return "Hello jersey";	
+		return "hello jersey";	
     }
 	
 		
