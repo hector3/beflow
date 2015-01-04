@@ -28,12 +28,11 @@ public class Servlet2 extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
-		System.out.println("hola lidia");
+		System.out.println("Servlet lanzado");
 		Thread thread = new Thread(new RRDThread());
-		thread.run();  
-		
-	
-		   
+		//thread.run();
+		thread.start();
+	   
 	}
 
 }
