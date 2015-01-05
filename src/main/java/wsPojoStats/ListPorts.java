@@ -11,6 +11,14 @@ public class ListPorts {
 		listports = new ArrayList<PortSwitch>();
 	}
 	
+	public List<PortSwitch> getListPorts() {
+		return listports;
+	}
+
+	public void setListports(List<PortSwitch> listports) {
+		this.listports = listports;
+	}
+
 	public void addPort(PortSwitch ps){
 		listports.add(ps);
 	}

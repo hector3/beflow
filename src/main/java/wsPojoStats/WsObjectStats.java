@@ -5,9 +5,9 @@ import java.util.List;
 public class WsObjectStats {
 	
 	String mac;
-	ListPorts listPorts;
-	public WsObjectStats(String mac, ListPorts listPorts) {
-
+	List<PortSwitch> listPorts;
+	public WsObjectStats(String mac, List<PortSwitch> listPorts) {
+		
 		this.mac = mac;
 		this.listPorts = listPorts;
 	}
@@ -17,13 +17,13 @@ public class WsObjectStats {
 	public void setMac(String mac) {
 		this.mac = mac;
 	}
-	public ListPorts getListPorts() {
+	public List<PortSwitch> getListPorts() {
 		return listPorts;
 	}
-	public void setListPorts(ListPorts listPorts) {
+	public void setListPorts(List<PortSwitch> listPorts) {
 		this.listPorts = listPorts;
 	}
-	
+
 	
 	
 }
