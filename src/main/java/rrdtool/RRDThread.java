@@ -7,6 +7,11 @@ import org.rrd4j.core.Util;
 
 import pojoStats.ListPortStatistics;
 import pojoStats.portStatistics;
+import wsPojoStats.ListPorts;
+import wsPojoStats.ListWsStats;
+import wsPojoStats.PortSwitch;
+import wsPojoStats.WsObjectStats;
+import wsobjects.CredWS;
 import httpclient.HttpCliente;
 
 import com.google.gson.Gson;
@@ -18,6 +23,10 @@ public class RRDThread implements Runnable{
 
 	int in = 0;
 	int out = 0;
+	HttpCliente httpcliente= new HttpCliente();
+	Gson gson = new Gson();
+	String objetoEnJson;
+	
 	public void getStatistics(){
 		
 		//recojo estadisticas
@@ -30,6 +39,24 @@ public class RRDThread implements Runnable{
 		out = out +200000;
 		
 		System.out.println("Recogiendo estadísticas.. De momento no hace nada a la espera de que se levante el servidor que aloja el controller");
+		
+		//código para recuperar los valores
+		objetoEnJson=httpcliente.getStatsPurged();
+		System.out.println(objetoEnJson);
+		final ListWsStats listWsObjectStats = gson.fromJson(objetoEnJson, ListWsStats.class);
+		
+		for (WsObjectStats lws : listWsObjectStats.getListWsObjectStats()){
+			System.out.println("MAC: "+lws.getMac());
+			for(PortSwitch ps: lws.getListPorts()){
+				System.out.println("Puerto: "+ps.getPortId());
+				System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
+				System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
+				
+			}
+			System.out.println("");
+			
+		}
+		//fin de código para recuperar los valores	
 		
 		
 		//devuelve JSON (esto realmente irá en la clase principal de webservice( de momento en pruebas)

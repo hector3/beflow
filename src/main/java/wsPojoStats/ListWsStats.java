@@ -10,6 +10,14 @@ public class ListWsStats {
 		listWsObjectStats = new ArrayList<WsObjectStats>();
 	}
 	
+	public List<WsObjectStats> getListWsObjectStats() {
+		return listWsObjectStats;
+	}
+
+	public void setListWsObjectStats(List<WsObjectStats> listWsObjectStats) {
+		this.listWsObjectStats = listWsObjectStats;
+	}
+
 	public void addObject(WsObjectStats o){
 		listWsObjectStats.add(o);
 	}

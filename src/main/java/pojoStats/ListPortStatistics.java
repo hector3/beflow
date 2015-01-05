@@ -32,22 +32,17 @@ public class ListPortStatistics {
 		for (portStatistics pss : portStatistics){
 			mac=pss.getNode().getId();
 			lps=pss.getPortStatistic();
-			System.out.println(lps.size());
-			System.out.println(mac);
 			lp.removeList();
 			for(portStatistic ps : lps){
-				System.out.println("helloooo!");
 				portId=ps.getNodeConnector().getId();
 				receivePackets=ps.getReceivePackets();
 				transmitPackets=ps.getTransmitPackets();
-				System.out.println(portId);
-				System.out.println(receivePackets);
-				System.out.println(transmitPackets);
 				portS = new PortSwitch(portId, receivePackets, transmitPackets);
 				lp.addPort(portS);
+				
 			}
 
-			lws.addObject(new WsObjectStats(mac, lp));
+			lws.addObject(new WsObjectStats(mac, lp.getListPorts()));
 		}
 
 		return lws;
