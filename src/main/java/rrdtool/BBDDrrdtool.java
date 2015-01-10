@@ -25,7 +25,7 @@ public class BBDDrrdtool {
 	public void createswitchBBDD( String name_sw, long date) throws IOException{//date = Util.getTime
 		
 		
-		RrdDef rrdDef = new RrdDef("./"+name_sw+".rrd");//creo un fichero rrd, con el nombre de switch
+		RrdDef rrdDef = new RrdDef("/var/www/html/beflow/rrdtool/"+name_sw+".rrd");//creo un fichero rrd, con el nombre de switch
         rrdDef.setStep(300);//Le indico que los datos seran act cada 5 min
         rrdDef.setStartTime(date);//En que momento empieza a actualizar datos
         
@@ -58,7 +58,7 @@ public class BBDDrrdtool {
 	public void createportBBDD( String name_port, long date) throws IOException{
 		
 		
-		RrdDef rrdDef = new RrdDef("./"+name_port+".rrd");//creo un fichero rrd, con el nombre de switch
+		RrdDef rrdDef = new RrdDef("/var/www/html/beflow/rrdtool/"+name_port+".rrd");//creo un fichero rrd, con el nombre de switch
         rrdDef.setStep(30);//Le indico que los datos seran act cada 30 seg
         rrdDef.setStartTime(date);//En que momento empieza a actualizar datos
         
@@ -91,7 +91,7 @@ public class BBDDrrdtool {
 		public void createflowBBDD( String name_flow, long date) throws IOException{//date = Util.getTime
 			
 			//coment
-			RrdDef rrdDef = new RrdDef("./"+name_flow+".rrd");//creo un fichero rrd, con el nombre de switch
+			RrdDef rrdDef = new RrdDef("/var/www/html/beflow/rrdtool"+name_flow+".rrd");//creo un fichero rrd, con el nombre de switch
 	        rrdDef.setStep(300);//Le indico que los datos seran act cada 5 min
 	        rrdDef.setStartTime(date);//En que momento empieza a actualizar datos
 	        
@@ -132,7 +132,7 @@ public class BBDDrrdtool {
 		
 		public void updateSWstatistic(String name_sw, double data) throws IOException{
 			
-			RrdDb rrdDb2 = new RrdDb("./"+name_sw+".rrd");
+			RrdDb rrdDb2 = new RrdDb("/var/www/html/beflow/rrdtool"+name_sw+".rrd");
 	        Sample sample = rrdDb2.createSample();
 	        sample.setValue("xxx", data);
 			rrdDb2.close();
@@ -141,7 +141,7 @@ public class BBDDrrdtool {
 		//Actualización PORT
 		public void updatePORTstatistic(String name_port, double received, double transmitted) throws IOException{
 			
-			RrdDb rrdDb2 = new RrdDb("./"+name_port+".rrd");
+			RrdDb rrdDb2 = new RrdDb("/var/www/html/beflow/rrdtool/"+name_port+".rrd");
 			//no se puede actualizar bbdd en un momento ya actualizado
 			
 			if (Util.getTime() == rrdDb2.getLastUpdateTime() ){
@@ -163,7 +163,7 @@ public class BBDDrrdtool {
 				
 		public void updateFLOWstatistic(String name_sw, double data) throws IOException{
 					
-		RrdDb rrdDb2 = new RrdDb("./"+name_sw+".rrd");
+		RrdDb rrdDb2 = new RrdDb("/var/www/html/beflow/rrdtool/"+name_sw+".rrd");
 		Sample sample = rrdDb2.createSample();
 		sample.setValue("xxx", data);
 		rrdDb2.close();
@@ -174,7 +174,7 @@ public class BBDDrrdtool {
 		
 		public boolean fileExist (String name){
 		
-			File rrdFile=new File("./"+name+".rrd");
+			File rrdFile=new File("/var/www/html/beflow/rrdtool/"+name+".rrd");
 			if (rrdFile.exists()) {
 			  return true;	
 		    }
@@ -229,7 +229,7 @@ public class BBDDrrdtool {
 			
 			RrdGraphDef graphDef = new RrdGraphDef();
 			
-			graphDef.setFilename("./"+name_bbdd+".png");
+			graphDef.setFilename("/var/www/html/beflow/rrdtool/"+name_bbdd+".png");
 			graphDef.setImageFormat("png");
 			
 			graphDef.setTitle("Traffic - Node "+name_bbdd);
@@ -238,8 +238,8 @@ public class BBDDrrdtool {
 	    	graphDef.setHeight(300);
 
 	    	graphDef.setTimeSpan(startTime, endTime);
-	    	graphDef.datasource("IN", "./"+name_bbdd+".rrd", "IN", ConsolFun.AVERAGE);
-	    	graphDef.datasource("OUT", "./"+name_bbdd+".rrd", "OUT", ConsolFun.AVERAGE);
+	    	graphDef.datasource("IN", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "IN", ConsolFun.AVERAGE);
+	    	graphDef.datasource("OUT", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "OUT", ConsolFun.AVERAGE);
 	    	
 	    	
 	    	graphDef.area("IN", Color.GREEN, "Inbound");
