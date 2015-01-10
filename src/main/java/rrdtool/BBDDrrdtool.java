@@ -217,14 +217,14 @@ public class BBDDrrdtool {
 		/********************* devuelve grafica 
 		 * @throws IOException *********/
 		
-		public void genGraph (String name_bbdd, String granularidad) throws IOException{
+		public String genGraph (String name_bbdd) throws IOException{
 			
 			
 			int resta=0;
-			resta = getGranularidad(granularidad);
+			resta = getGranularidad("1d");//granularidad fija de 24 h
 			long endTime = Util.getTime();//hasta la actualidad
 			long startTime = endTime-(resta*60*60L);
-			
+			String response="";
 			//Definición del grafico
 			
 			RrdGraphDef graphDef = new RrdGraphDef();
@@ -235,7 +235,10 @@ public class BBDDrrdtool {
 			graphDef.setTitle("Traffic - Node "+name_bbdd);
 			graphDef.setVerticalLabel("Bits per second");
 			graphDef.setWidth(500);
-	    	graphDef.setHeight(300);
+	    	graphDef.setHeight(150);
+	    	graphDef.setBase(1000);
+	    	//graphDef.setAltAutoscaleMax(true);
+	    	
 
 	    	graphDef.setTimeSpan(startTime, endTime);
 	    	graphDef.datasource("IN", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "IN", ConsolFun.AVERAGE);
@@ -260,6 +263,10 @@ public class BBDDrrdtool {
 	    	BufferedImage bi = new BufferedImage(100,100,BufferedImage.TYPE_INT_RGB);
 	    	graph.render(bi.getGraphics());
 		
+	    	
+	    	//devuelvo link donde se ha generado la grafica
+	    	response = "http://147.83.113.109/beflow/rrdtool/"+name_bbdd+".png";
+	    	return response;
 		}
 		
 		/********************* granularidad *********/

@@ -58,8 +58,7 @@ public class MyResource {
 	LibSuport ls=new LibSuport();
 	Response response=null;
 	HttpCliente httpcliente= new HttpCliente();
-	Servlet2 x = new Servlet2();
-	
+	BBDDrrdtool rrdtool =new BBDDrrdtool();
 	// change your request and response accordingly
 
 	
@@ -92,7 +91,7 @@ public class MyResource {
 		
 		BBDDrrdtool h = new BBDDrrdtool();
 		try {
-			h.genGraph("opendaylight", "1d");
+			h.genGraph("00:01:d4:ca:6d:b5:f4:0f_3");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -610,5 +609,30 @@ public class MyResource {
 		return(response);	
     }
 
+	
+	@Path("/getGraph/{node_name}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getgraph(@PathParam("node_name") String node_name) throws UnknownHostException {
+		
+
+		String mensaje ="Consulta sobre grafica: "+node_name;
+		System.out.println(mensaje);
+		String result="";
+		
+		try{ //genero la grafica
+			
+			result = rrdtool.genGraph(node_name);
+			response=ls.genResponse(result);
+
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		
+		
+		return(response);    	
+    }
 
 }
