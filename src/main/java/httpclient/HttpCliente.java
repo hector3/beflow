@@ -23,7 +23,7 @@ public class HttpCliente {
 	//http://147.83.118.254:8080/controller/nb/v2/statistics/default/port
 	HttpClient httpclient = HttpClientBuilder.create().build();
 	String result;
-	String urlLocal="http://localhost:8080/jersey-quickstart-webapp/beflow/myresource/";
+	String urlLocal="http://localhost:8000/jersey-quickstart-webapp/beflow/myresource/";
 	
 	public HttpCliente() {
 		encoding = Base64.encodeBytes ((user + ":" + passwd).getBytes());
@@ -60,8 +60,8 @@ public class HttpCliente {
 	
 
 	public String getStatistics(){
-		url+="statistics/default/port";
-		httpget = new HttpGet(url);
+		String urlGetStats = "http://147.83.118.254:8080/controller/nb/v2/statistics/default/port";
+		httpget = new HttpGet(urlGetStats);
 		httpget.setHeader("Authorization", "Basic " + encoding);
 		System.out.println("executing request " + httpget.getRequestLine());
 		HttpResponse response = null;
@@ -100,8 +100,8 @@ public class HttpCliente {
 	}	
 	
 	public String getStatsPurged(){
-		urlLocal += "getStatsController";
-		httpget = new HttpGet(urlLocal);
+		String urlLocalStats="http://localhost:8080/jersey-quickstart-webapp/beflow/myresource/getStatsController";
+		httpget = new HttpGet(urlLocalStats);
 		System.out.println("executing request " + httpget.getRequestLine());
 		
 		HttpResponse response = null;
