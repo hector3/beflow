@@ -40,6 +40,7 @@ public class RRDThread implements Runnable{
 		
 		System.out.println("Recogiendo estadísticas.. De momento no hace nada a la espera de que se levante el servidor que aloja el controller");
 		
+		
 		//código para recuperar los valores
 		objetoEnJson=httpcliente.getStatsPurged();
 		System.out.println(objetoEnJson);
@@ -56,6 +57,8 @@ public class RRDThread implements Runnable{
 			System.out.println("");
 			
 		}
+		
+		
 		//fin de código para recuperar los valores	
 		
 		
@@ -136,7 +139,7 @@ public class RRDThread implements Runnable{
 			try {
 
 				getStatistics();//recojo estadisticas
-				Thread.sleep(30000);//milisegundos
+				Thread.sleep(5000);//milisegundos
 				System.out.println("Estoy dentro del run");
 				
 			} catch (InterruptedException e) {
