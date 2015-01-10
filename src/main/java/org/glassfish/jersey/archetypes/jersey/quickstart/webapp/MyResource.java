@@ -90,7 +90,13 @@ public class MyResource {
     public String getItest() throws UnknownHostException {
 		
 		
-		
+		BBDDrrdtool h = new BBDDrrdtool();
+		try {
+			h.genGraph("opendaylight", "1d");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "hello jersey";	
     }
 	

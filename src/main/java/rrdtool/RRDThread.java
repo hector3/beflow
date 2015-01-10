@@ -139,7 +139,7 @@ public class RRDThread implements Runnable{
 			try {
 
 				getStatistics();//recojo estadisticas
-				Thread.sleep(5000);//milisegundos
+				Thread.sleep(30000);//milisegundos
 				System.out.println("Estoy dentro del run");
 				
 			} catch (InterruptedException e) {

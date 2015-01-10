@@ -13,7 +13,7 @@
         <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/beflow_prod</property>  
          <!-- Aquí has de posar el teu user y contraseña -->
         <property name="hibernate.connection.username">root</property>  
-        <property name="hibernate.connection.password">0p3nf0w</property>  
+        <property name="hibernate.connection.password">d3x4t</property>  
          
         <!-- Configuracion del pool interno --> 
         <property name="connection.pool_size">1</property>
@@ -34,4 +34,4 @@
         <mapping class="org.glassfish.jersey.archetypes.jersey.quickstart.webapp.Node" />
   
     </session-factory>  
-</hibernate-configuration>  
+</hibernate-configuration> 
