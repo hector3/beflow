@@ -3,6 +3,7 @@ package httpclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import net.iharder.Base64;
 
@@ -10,7 +11,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+
+import com.google.gson.Gson;
+
+import flowController.Flow;
 
 
 public class HttpCliente {
@@ -18,6 +25,7 @@ public class HttpCliente {
 	String user="admin";
 	String passwd="admin";
 	HttpGet httpget;
+	HttpPut httpput;
 	String encoding;
 	String url = "http://147.83.118.254:8080/controller/nb/v2/";
 	//http://147.83.118.254:8080/controller/nb/v2/statistics/default/port
@@ -32,7 +40,7 @@ public class HttpCliente {
 	}
 	
 	public String getNodes(){
-		url+="topology/default";
+		String url = "http://147.83.118.254:8080/controller/nb/v2/topology/default";
 		httpget = new HttpGet(url);
 		httpget.setHeader("Authorization", "Basic " + encoding);
 		System.out.println("executing request " + httpget.getRequestLine());
@@ -126,6 +134,37 @@ public class HttpCliente {
 		
 	}
 		
-	
+	public String addflowController(String idNode, String name, Flow flow) throws UnsupportedEncodingException{
+		Gson gson = new Gson();
+		String flowEnJson = gson.toJson(flow);
+		StringEntity entidad = new StringEntity(flowEnJson);
+		String urlController="http://147.83.118.254:8080/controller/nb/v2/flowprogrammer/default/node/OF/"+idNode+"/staticFlow/"+name;
+		httpput = new HttpPut(urlController);
+		httpput.setHeader("Authorization", "Basic " + encoding);
+		httpput.setHeader("Content-Type","application/json");
+		httpput.setEntity(entidad);
+		System.out.println("executing request " + httpput.getRequestLine());
+		
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}	
     
 }
