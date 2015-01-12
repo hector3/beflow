@@ -1,5 +1,6 @@
 package org.glassfish.jersey.archetypes.jersey.quickstart.webapp;
 
+import flowController.Flow;
 import httpclient.HttpCliente;
 
 import java.io.IOException;
@@ -476,7 +477,33 @@ public class MyResource {
 		System.out.println(response.toString());
 		return(response);	
     }
-    
+
+	
+	
+	@Path("/addFlow")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addFlow(String json) throws UnknownHostException {
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		String respuesta;
+		
+		respuesta=null;
+		try{
+			System.out.println(json);
+			final Flow flow = gson.fromJson(json, Flow.class);
+			respuesta=httpcliente.addflowController(flow.getNode().getId(),flow.getName(),flow);
+			response = ls.genResponse(respuesta);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			respuesta="error";
+			response = ls.genResponse(respuesta);
+		}
+		//System.out.println(response.toString());
+		return(response);	
+    }	
 /*********************************NODES******************************************/
 	
 	@Path("/addNode")
