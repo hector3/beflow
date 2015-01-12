@@ -33,30 +33,14 @@ public class RRDThread implements Runnable{
 		
 		
 		getPortStatistics();
-		rrdupdateport("opendaylight",in, out);
-		System.out.println(in+" "+ out);
-		in = in + 3000000;
-		out = out +200000;
 		
+			
 		System.out.println("Recogiendo estadísticas.. De momento no hace nada a la espera de que se levante el servidor que aloja el controller");
 		
 		
-		//código para recuperar los valores
-		objetoEnJson=httpcliente.getStatsPurged();
-		System.out.println(objetoEnJson);
-		final ListWsStats listWsObjectStats = gson.fromJson(objetoEnJson, ListWsStats.class);
 		
-		for (WsObjectStats lws : listWsObjectStats.getListWsObjectStats()){
-			System.out.println("MAC: "+lws.getMac());
-			for(PortSwitch ps: lws.getListPorts()){
-				System.out.println("Puerto: "+ps.getPortId());
-				System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
-				System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
-				
-			}
-			System.out.println("");
 			
-		}
+	
 		
 		
 		//fin de código para recuperar los valores	
@@ -74,25 +58,30 @@ public class RRDThread implements Runnable{
 	
 	//metodo que retorna stadisticas en un objeto
 	
-	public ListPortStatistics getPortStatistics(){
-		//******************Ho farem quan tinguem connexió amb el controller**//
+	public void getPortStatistics(){
 		
-		/*Gson gson = new Gson();
-		HttpCliente http = new HttpCliente();
-		String json=http.getStatistics();
+		//código para recuperar los valores
+		objetoEnJson=httpcliente.getStatsPurged();
 		
-		ListPortStatistics lps = gson.fromJson(json, ListPortStatistics.class);
+		//System.out.println(objetoEnJson);
 		
-		System.out.println("SOY YO?");
-		List <portStatistics> lista= (List<portStatistics>) lps.genListPurged();
-		
-		for (portStatistics p : lista){
+		final ListWsStats listWsObjectStats = gson.fromJson(objetoEnJson, ListWsStats.class);
+				
+		for (WsObjectStats lws : listWsObjectStats.getListWsObjectStats()){
 			
-			//System.out.println(p.getNode());
+			//System.out.println("MAC: "+lws.getMac());
+			
+			for(PortSwitch ps: lws.getListPorts()){
+				
+				//System.out.println("Puerto: "+ps.getPortId());
+				
+				String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
+				//System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
+				//System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
+				rrdupdateport(name_bbdd,ps.getReceivePackets(), ps.getTransmitPackets());		
+			}
 		}
-		return lps;
-		*/
-		return null;
+		
 	}
 	
 	//metodo actualiza la bbdd
