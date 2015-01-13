@@ -22,7 +22,7 @@ public class LibSuport {
 		
 		response = Response.status(200).
 		entity(json).
-		header("Access-Control-Allow-Origin", "*").build();
+		header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Methods", "GET, POST, OPTIONS").build();
 		
 		
 		return response;
@@ -33,7 +33,7 @@ public class LibSuport {
 		
 		response = Response.status(200).
 		entity(json).
-		header("Access-Control-Allow-Origin", "*").build();
+		header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Methods", "GET, POST, OPTIONS").build();
 		
 		
 		return response;

@@ -1,10 +1,14 @@
 package pojoController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import wsPojoController.WSListObjects;
 import wsPojoController.edgePropWs;
+import wsPojoTopology.Topology;
+import wsPojoTopology.edges;
+import wsPojoTopology.nodes;
 
 
 public class ListEdgeProperties {
@@ -43,5 +47,38 @@ public class ListEdgeProperties {
 
 		}
 		return wslo;
+	}
+	public Topology genListPurgedTop(){
+		List <nodes> listnodes = new ArrayList <nodes>();
+		List <edges> listedges = new ArrayList <edges>();
+		for (edgeProperties ep : edgeProperties){
+			String idSource=ep.getEdge().getHnc().getId();
+			String idTarget=ep.getEdge().getTnc().getId();
+			String id=idSource+"-"+idTarget;
+			nodes node =new nodes(ep.getEdge().getTnc().getNode().getId(),ep.getEdge().getTnc().getNode().getId(),3);
+			edges edge =new edges(id,ep.getEdge().getHnc().getNode().getId(),ep.getEdge().getTnc().getNode().getId());
+			boolean repetidoNode=false;
+			for(nodes nodesTemp : listnodes){
+				if(node.getId().equalsIgnoreCase(nodesTemp.getId())){
+					repetidoNode=true;
+				}
+			}
+			
+			if(!repetidoNode){
+			listnodes.add(node);
+			}
+			
+			boolean repetidoEdge=false;
+			for(edges edgesTemp : listedges){
+				if(edge.getSource().equalsIgnoreCase(edgesTemp.getTarget())&&(edge.getTarget().equalsIgnoreCase(edgesTemp.getSource()))){
+					repetidoEdge=true;
+				}
+			}			
+			if(!repetidoEdge){
+			listedges.add(edge);
+			}
+		}
+		Topology top = new Topology(listnodes,listedges);
+		return top;
 	}
 }

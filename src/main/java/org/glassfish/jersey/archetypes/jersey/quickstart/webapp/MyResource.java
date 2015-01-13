@@ -11,6 +11,7 @@ import java.util.List;
 import wsPojoController.WSListObjects;
 import wsPojoStats.ListWsStats;
 import wsPojoStats.WsObjectStats;
+import wsPojoTopology.Topology;
 import wsobjects.*;
 import controller.*;
 
@@ -452,6 +453,34 @@ public class MyResource {
 		return(response);	
     }
 
+	@Path("/getTopologyController")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTopologyController() throws UnknownHostException {
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		String objetoEnJson=httpcliente.getNodes();
+		final ListEdgeProperties lep = gson.fromJson(objetoEnJson, ListEdgeProperties.class);
+		//objetoEnJson = gson.toJson(lep);
+		Topology top = lep.genListPurgedTop();
+		try{
+			objetoEnJson = gson.toJson(top);
+			System.out.println(objetoEnJson);
+			response = ls.genResponse(objetoEnJson);
+			
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
+	
+	
+	
 	@Path("/getStatsController")
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
