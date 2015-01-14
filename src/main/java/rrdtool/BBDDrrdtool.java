@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import org.glassfish.jersey.archetypes.jersey.quickstart.webapp.CRUD;
+import org.glassfish.jersey.archetypes.jersey.quickstart.webapp.Node;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.DsType;
 import org.rrd4j.core.RrdDb;
@@ -149,6 +151,9 @@ public class BBDDrrdtool {
 			}
 			
 			else{
+				
+				received = received *8; // bits
+				transmitted= transmitted *8;
 				System.out.println(" Actualizandose datos");
 		        Sample sample = rrdDb2.createSample();
 		        sample.setTime(Util.getTime());
@@ -217,11 +222,20 @@ public class BBDDrrdtool {
 		/********************* devuelve grafica 
 		 * @throws IOException *********/
 		
-		public String genGraph (String name_bbdd) throws IOException{
+		public String genGraph (String name_port, String granularidad) throws IOException{
 			
+			
+		
+			String name_bbdd ="";
+			
+			String MAC =name_port.substring(3,19);
+			String port_number= name_port.substring(21);
+			
+			name_bbdd = titulo(MAC,port_number);
+		
 			
 			int resta=0;
-			resta = getGranularidad("1d");//granularidad fija de 24 h
+			resta = getGranularidad(granularidad);//granularidad fija de 24 h
 			long endTime = Util.getTime();//hasta la actualidad
 			long startTime = endTime-(resta*60*60L);
 			String response="";
@@ -232,11 +246,12 @@ public class BBDDrrdtool {
 			graphDef.setFilename("/var/www/html/beflow/rrdtool/"+name_bbdd+".png");
 			graphDef.setImageFormat("png");
 			
+			
 			graphDef.setTitle("Traffic - Node "+name_bbdd);
 			graphDef.setVerticalLabel("Bits per second");
 			graphDef.setWidth(500);
 	    	graphDef.setHeight(150);
-	    	graphDef.setBase(1000);
+	    	//graphDef.setBase(1000);
 	    	//graphDef.setAltAutoscaleMax(true);
 	    	
 
@@ -267,6 +282,26 @@ public class BBDDrrdtool {
 	    	//devuelvo link donde se ha generado la grafica
 	    	response = "http://147.83.113.109/beflow/rrdtool/"+name_bbdd+".png";
 	    	return response;
+		}
+		
+		
+		public String titulo(String MAC, String port){
+			
+			Node node = new Node();
+			String name_bbdd="";
+			CRUD crud =new CRUD();
+			
+			try{
+				node =crud.read_node2(MAC, port);
+				name_bbdd = node.getNode_name();
+			} catch (Exception e){
+				
+				//no hay datos en la bbdd
+				name_bbdd= "Switch "+MAC+" port "+port;
+			}
+			
+			
+			return name_bbdd;
 		}
 		
 		/********************* granularidad *********/
