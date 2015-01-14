@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import javax.ws.rs.core.Response;
+
 import net.iharder.Base64;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -26,6 +30,7 @@ public class HttpCliente {
 	String passwd="admin";
 	HttpGet httpget;
 	HttpPut httpput;
+	HttpDelete httpdel;
 	String encoding;
 	String url = "http://147.83.118.254:8080/controller/nb/v2/";
 	//http://147.83.118.254:8080/controller/nb/v2/statistics/default/port
@@ -166,5 +171,89 @@ public class HttpCliente {
 		return result;
 		
 	}	
-    
+
+	public String getFlows(){
+		String urlGetFlows = "http://147.83.118.254:8080/controller/nb/v2/flowprogrammer/default";
+		httpget = new HttpGet(urlGetFlows);
+		httpget.setHeader("Authorization", "Basic " + encoding);
+		System.out.println("executing request " + httpget.getRequestLine());
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
+	
+	public String getNodesController(){
+		String urlGetNodes = "http://147.83.118.254:8080/controller/nb/v2/switchmanager/default/nodes";
+		httpget = new HttpGet(urlGetNodes);
+		httpget.setHeader("Authorization", "Basic " + encoding);
+		System.out.println("executing request " + httpget.getRequestLine());
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
+
+	public StatusLine delFlow(String mac, String name){
+		String urlDelFlow = "http://147.83.118.254:8080/controller/nb/v2/flowprogrammer/default/node/OF/"+mac+"/staticFlow/"+name;
+		System.out.println(urlDelFlow);
+		httpdel = new HttpDelete(urlDelFlow);
+		httpdel.setHeader("Authorization", "Basic " + encoding);
+		System.out.println("executing request " + httpdel.getRequestLine());
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpdel);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		//HttpEntity entity = response.getEntity();
+		//System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		return response.getStatusLine();
+		
+	}
+	
+	
 }
