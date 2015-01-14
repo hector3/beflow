@@ -1,7 +1,6 @@
 package pojoController;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import wsPojoController.WSListObjects;

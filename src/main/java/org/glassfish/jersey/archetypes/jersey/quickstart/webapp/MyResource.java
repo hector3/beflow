@@ -36,7 +36,12 @@ import javax.ws.rs.core.MediaType;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+
 import pojoController.ListEdgeProperties;
+import pojoControllerFlowConfig.ConfigObject;
+import pojoNodes.Nodes;
 import pojoStats.ListPortStatistics;
 import rrdtool.BBDDrrdtool;
 import rrdtool.Servlet2;
@@ -59,6 +64,7 @@ public class MyResource {
 	Gson gson = new Gson();
 	LibSuport ls=new LibSuport();
 	Response response=null;
+	HttpResponse httpresponse=null;
 	HttpCliente httpcliente= new HttpCliente();
 	BBDDrrdtool rrdtool =new BBDDrrdtool();
 	// change your request and response accordingly
@@ -331,6 +337,7 @@ public class MyResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response insertCompany(String json) throws UnknownHostException{
+		System.out.println("Post con path addCompany recibido");
 		final CompanyWS company = gson.fromJson(json, CompanyWS.class);
 		String resultado= "";
 		//compruebo si la compañia existe
@@ -532,7 +539,86 @@ public class MyResource {
 		}
 		//System.out.println(response.toString());
 		return(response);	
-    }	
+    }
+	
+	@Path("/getFlows")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFlows() throws UnknownHostException {
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getFlows();
+			System.out.println(objetoEnJson.toString());
+			final ConfigObject co = gson.fromJson(objetoEnJson, ConfigObject.class);
+			objetoEnJson = gson.toJson(co.genListPurged());
+			
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
+	
+	@Path("/getNodesController")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNodesController() throws UnknownHostException {
+
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getNodesController();
+			final Nodes nodes = gson.fromJson(objetoEnJson, Nodes.class);
+
+			objetoEnJson = gson.toJson(nodes.genListPurged());
+			
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
+	
+	@Path("/delFlow/{mac}/{name}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+    public Response delFlow(@PathParam("mac") String mac,@PathParam("name") String name) throws UnknownHostException {
+		//crea objeto test
+		//ListEdgeProperties lep = ls.creaObjetoTest();
+		System.out.println("recibidos: "+mac+ " y "+name);
+		StatusLine sl=null;
+		String respuesta;
+		try{
+			sl=httpcliente.delFlow(mac,name);
+			System.out.println("Respuesta HTTP del controller: "+sl.getStatusCode());
+			//objetoEnJson+="Eliminado OK";
+			//final ListPortStatistics lps = gson.fromJson(objetoEnJson, ListPortStatistics.class);
+			//objetoEnJson = gson.toJson(lps.genListPurged());
+			response = ls.genResponseInt(sl.getStatusCode());
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			response = ls.genResponseInt(-1);
+		}
+		
+		return(response);	
+    }
 /*********************************NODES******************************************/
 	
 	@Path("/addNode")
