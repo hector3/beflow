@@ -97,13 +97,7 @@ public class MyResource {
     public String getItest() throws UnknownHostException {
 		
 		
-		BBDDrrdtool h = new BBDDrrdtool();
-		try {
-			h.genGraph("00:01:d4:ca:6d:b5:f4:0f_3");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 		return "hello jersey";	
     }
 	
@@ -752,20 +746,62 @@ public class MyResource {
     }
 
 	
-	@Path("/getGraph/{node_name}")
+	@Path("/getGraphPort/{gran_mac_por}")
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getgraph(@PathParam("node_name") String node_name) throws UnknownHostException {
+    public Response getgraph(@PathParam("gran_mac_por") String option) throws UnknownHostException {
 		
 
+		String granularidad =option.substring(0,2);
+		String node_name = option.substring(3);
+		
+		
+		
+		
 		String mensaje ="Consulta sobre grafica: "+node_name;
+		
 		System.out.println(mensaje);
+		
 		String result="";
 		
 		try{ //genero la grafica
 			
-			result = rrdtool.genGraph(node_name);
+			result = rrdtool.genGraph(node_name, granularidad);
+			response=ls.genResponse(result);
+
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		
+		
+		return(response);    	
+    }
+	
+	
+	@Path("/getGraphPortJSON/{gran_mac_por}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getgraphJSON(@PathParam("gran_mac_por") String option) throws UnknownHostException {
+		
+
+		String granularidad =option.substring(0,2);
+		String node_name = option.substring(3);
+		
+		
+		
+		
+		String mensaje ="Devuelve JSON: "+node_name;
+		
+		System.out.println(mensaje);
+		
+		String result="";
+		
+		try{ //genero la grafica
+			
+			result = rrdtool.getJson(node_name, granularidad);
 			response=ls.genResponse(result);
 
 		}
