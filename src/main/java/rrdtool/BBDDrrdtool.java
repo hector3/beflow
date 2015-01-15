@@ -228,9 +228,10 @@ public class BBDDrrdtool {
 		
 			String titulo ="";
 			
-			String MAC =name_bbdd.substring(3,19);
-			String port_number= name_bbdd.substring(21);
+			String MAC =name_bbdd.substring(0,23);
+			String port_number= name_bbdd.substring(24);
 			
+			System.out.println(MAC+"      "+port_number);
 			titulo = titulo(MAC,port_number);
 		
 			
@@ -280,7 +281,7 @@ public class BBDDrrdtool {
 		
 	    	
 	    	//devuelvo link donde se ha generado la grafica
-	    	response = "http://147.83.113.109/beflow/rrdtool/"+name_bbdd+".png";
+	    	response = "http://147.83.113.109/beflow/rrdtool/"+titulo+".png";
 	    	return response;
 		}
 		
@@ -297,7 +298,7 @@ public class BBDDrrdtool {
 			} catch (Exception e){
 				
 				//no hay datos en la bbdd
-				name_bbdd= MAC+""+port;
+				name_bbdd= "Switch :"+MAC+" port: "+port;
 			}
 			
 			
