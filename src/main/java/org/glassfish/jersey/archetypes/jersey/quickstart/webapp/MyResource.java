@@ -798,18 +798,29 @@ public class MyResource {
 		System.out.println(mensaje);
 		
 		String result="";
+		String objetoEnJson;
 		
+		//devuelve JSON (esto realmente irá en la clase principal de webservice( de momento en pruebas)
+		//BBDDrrdtool bbdd2 = new BBDDrrdtool();
+		//bbdd2.getJson("opendaylight", "2d");
 		try{ //genero la grafica
 			
-			result = rrdtool.getJson(node_name, granularidad);
-			response=ls.genResponse(result);
+			
+			
+			
+			
+			result = rrdtool.getJson(node_name, granularidad);	
+			System.out.println(result);
+			//objetoEnJson=gson.toJson(result);
+			//response = ls.genResponse(objetoEnJson);
+			response = ls.genResponse(result);			
+			}catch(Exception e){
+				System.out.println("problema con GSON, excepción: "+e.getMessage());
+				objetoEnJson="error";
+				response=ls.genResponse(objetoEnJson);
+				
+			}
 
-		}
-		catch(Exception e){
-			System.out.println("problemas.. Excepcion: "+e.getMessage());
-		}
-		
-		
 		return(response);    	
     }
 

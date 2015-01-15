@@ -18,8 +18,8 @@ public class RRD2Json {
 	public String generateJson(String name_bbdd,long endTime, long startTime, ConsolFun fun) throws RRD2JsonException {
 		String rrdJson = "";
 		try {
-	
-		RrdDb rrdDb3 = new RrdDb("./"+name_bbdd+".rrd");
+			
+		RrdDb rrdDb3 = new RrdDb("/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd");
 			
        	FetchRequest fetchRequest = rrdDb3.createFetchRequest(fun,startTime,endTime);
        	FetchData fetchData = fetchRequest.fetchData();
