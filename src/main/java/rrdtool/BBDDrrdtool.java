@@ -222,16 +222,17 @@ public class BBDDrrdtool {
 		/********************* devuelve grafica 
 		 * @throws IOException *********/
 		
-		public String genGraph (String name_port, String granularidad) throws IOException{
+		public String genGraph (String name_bbdd, String granularidad) throws IOException{
 			
 			
 		
-			String name_bbdd ="";
+			String titulo ="";
 			
-			String MAC =name_port.substring(3,19);
-			String port_number= name_port.substring(21);
+			String MAC =name_bbdd.substring(0,23);
+			String port_number= name_bbdd.substring(24);
 			
-			name_bbdd = titulo(MAC,port_number);
+			System.out.println(MAC+"      "+port_number);
+			titulo = titulo(MAC,port_number);
 		
 			
 			int resta=0;
@@ -243,11 +244,11 @@ public class BBDDrrdtool {
 			
 			RrdGraphDef graphDef = new RrdGraphDef();
 			
-			graphDef.setFilename("/var/www/html/beflow/rrdtool/"+name_bbdd+".png");
+			graphDef.setFilename("/var/www/html/beflow/rrdtool/"+titulo+".png");
 			graphDef.setImageFormat("png");
 			
 			
-			graphDef.setTitle("Traffic - Node "+name_bbdd);
+			graphDef.setTitle("Traffic - Node "+titulo);
 			graphDef.setVerticalLabel("Bits per second");
 			graphDef.setWidth(500);
 	    	graphDef.setHeight(150);
@@ -280,7 +281,7 @@ public class BBDDrrdtool {
 		
 	    	
 	    	//devuelvo link donde se ha generado la grafica
-	    	response = "http://147.83.113.109/beflow/rrdtool/"+name_bbdd+".png";
+	    	response = "http://147.83.113.109/beflow/rrdtool/"+titulo+".png";
 	    	return response;
 		}
 		
@@ -297,7 +298,7 @@ public class BBDDrrdtool {
 			} catch (Exception e){
 				
 				//no hay datos en la bbdd
-				name_bbdd= "Switch "+MAC+" port "+port;
+				name_bbdd= "Switch :"+MAC+" port: "+port;
 			}
 			
 			
