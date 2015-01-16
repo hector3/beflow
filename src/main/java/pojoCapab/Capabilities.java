@@ -1,6 +1,7 @@
 package pojoCapab;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Capabilities {
@@ -18,7 +19,10 @@ public class Capabilities {
 		for(nodeProperties np : nodeProperties){
 			String mac = np.getNode().getId();
 			String capab = np.getProperties().getSupportedFlowActions().getValue();
-			listcap.add(new wsPojoCap.nodecap(mac, capab));
+			String cadenaSinExtremos = capab.substring(1, capab.length()-1).replaceAll("\\s","");
+			List<String> listCap = new ArrayList<String>(Arrays.asList(cadenaSinExtremos.split(",")));
+			
+			listcap.add(new wsPojoCap.nodecap(mac, listCap));
 		}
 		cap = new wsPojoCap.Capabilities(listcap);
 		
