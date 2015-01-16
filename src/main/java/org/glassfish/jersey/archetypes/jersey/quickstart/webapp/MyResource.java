@@ -39,8 +39,10 @@ import javax.ws.rs.core.Response;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 
+import pojoCapab.Capabilities;
 import pojoController.ListEdgeProperties;
 import pojoControllerFlowConfig.ConfigObject;
+import pojoNodeConnector.NodeConnector;
 import pojoNodes.Nodes;
 import pojoStats.ListPortStatistics;
 import rrdtool.BBDDrrdtool;
@@ -587,6 +589,57 @@ public class MyResource {
 		System.out.println(response.toString());
 		return(response);	
     }
+	
+	@Path("/getCap")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCapController() throws UnknownHostException {
+
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getNodesController();
+			System.out.println(objetoEnJson);
+			final Capabilities cap = gson.fromJson(objetoEnJson, Capabilities.class);
+			objetoEnJson = gson.toJson(cap.genListPurged());
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }
+
+	@Path("/getPortsByMac/{mac}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPortsByMac(@PathParam("mac") String mac) throws UnknownHostException {
+
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getPortsByMac(mac);
+			System.out.println(objetoEnJson);
+			final NodeConnector nc = gson.fromJson(objetoEnJson, NodeConnector.class);
+			objetoEnJson = gson.toJson(nc.genListPurged());
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }	
+	
 	
 	@Path("/delFlow/{mac}/{name}")
 	@GET

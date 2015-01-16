@@ -198,6 +198,33 @@ public class HttpCliente {
 		return result;
 		
 	}
+
+	public String getPortsByMac(String mac){
+		String urlGetPortsByMac = "http://147.83.118.254:8080/controller/nb/v2/switchmanager/default/node/OF/"+mac;
+		httpget = new HttpGet(urlGetPortsByMac);
+		httpget.setHeader("Authorization", "Basic " + encoding);
+		System.out.println("executing request " + httpget.getRequestLine());
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
 	
 	public String getNodesController(){
 		String urlGetNodes = "http://147.83.118.254:8080/controller/nb/v2/switchmanager/default/nodes";
@@ -254,6 +281,31 @@ public class HttpCliente {
 		return response.getStatusLine();
 		
 	}
-	
+	public String getCapController(){
+		String urlGetNodes = "http://147.83.118.254:8080/controller/nb/v2/switchmanager/default/nodes";
+		httpget = new HttpGet(urlGetNodes);
+		httpget.setHeader("Authorization", "Basic " + encoding);
+		System.out.println("executing request " + httpget.getRequestLine());
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+			System.out.println(response.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		System.out.println(entity.toString());
+		try {
+			result = getResult(response).toString();
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}	
 	
 }
