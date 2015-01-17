@@ -654,7 +654,7 @@ public class MyResource {
 			
 			objetoEnJson=httpcliente.getPortsByMac(mac);
 			System.out.println(objetoEnJson);
-			final pojoNodeConnector2.NodeConnector nc = gson.fromJson(objetoEnJson, pojoNodeConnector2.NodeConnector.class);
+			final pojoNodeConnector2.NodeConnectorClass nc = gson.fromJson(objetoEnJson, pojoNodeConnector2.NodeConnectorClass.class);
 			objetoEnJson = gson.toJson(nc.genListPurged());
 			response = ls.genResponse(objetoEnJson);
 			

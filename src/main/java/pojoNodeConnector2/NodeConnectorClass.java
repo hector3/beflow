@@ -3,11 +3,11 @@ package pojoNodeConnector2;
 import java.util.ArrayList;
 import java.util.List;
 //putu git
-public class NodeConnector {
+public class NodeConnectorClass {
 	List <nodeConnectorProperties> nodeConnectorProperties;
 	
 	
-	public NodeConnector(){
+	public NodeConnectorClass(){
 		nodeConnectorProperties = new ArrayList <nodeConnectorProperties>();
 	}
 
