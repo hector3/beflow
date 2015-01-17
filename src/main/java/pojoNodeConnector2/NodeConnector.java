@@ -2,7 +2,7 @@ package pojoNodeConnector2;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//putu git
 public class NodeConnector {
 	List <nodeConnectorProperties> nodeConnectorProperties;
 	
