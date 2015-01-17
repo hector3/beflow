@@ -252,6 +252,7 @@ public class HttpCliente {
 		return result;
 		
 	}
+	
 
 	public StatusLine delFlow(String mac, String name){
 		String urlDelFlow = "http://147.83.118.254:8080/controller/nb/v2/flowprogrammer/default/node/OF/"+mac+"/staticFlow/"+name;

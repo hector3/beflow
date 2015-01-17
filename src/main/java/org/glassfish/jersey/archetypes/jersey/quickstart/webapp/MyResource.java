@@ -589,7 +589,9 @@ public class MyResource {
 		System.out.println(response.toString());
 		return(response);	
     }
-	
+
+
+
 	@Path("/getCap")
 	@GET
     @Consumes(MediaType.TEXT_PLAIN)
@@ -640,6 +642,30 @@ public class MyResource {
 		return(response);	
     }	
 	
+	@Path("/getPortsByMac2/{mac}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPortsByMac2(@PathParam("mac") String mac) throws UnknownHostException {
+
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getPortsByMac(mac);
+			System.out.println(objetoEnJson);
+			final pojoNodeConnector2.NodeConnector nc = gson.fromJson(objetoEnJson, pojoNodeConnector2.NodeConnector.class);
+			objetoEnJson = gson.toJson(nc.genListPurged());
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);	
+    }	
 	
 	@Path("/delFlow/{mac}/{name}")
 	@GET

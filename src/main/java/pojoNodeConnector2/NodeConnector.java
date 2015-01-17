@@ -1,4 +1,4 @@
-package pojoNodeConnector;
+package pojoNodeConnector2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +21,18 @@ public class NodeConnector {
 		this.nodeConnectorProperties = nodeConnectorProperties;
 	}
 	
-	public wsPojoNodeConnector.ListPorts genListPurged(){
+	public wsPojoNodeConnector2.ListPorts genListPurged(){
 		String namePort;
-		List <String> listPorts = new ArrayList <String>();
-		wsPojoNodeConnector.ListPorts lp;
+		String idPort;
+		List <wsPojoNodeConnector2.port> listPorts = new ArrayList <wsPojoNodeConnector2.port>();
 		for(nodeConnectorProperties ncp:nodeConnectorProperties){
 			namePort=ncp.getProperties().getName().getValue();
-			listPorts.add(namePort);
+			idPort=ncp.getNodeconnector().getId();
+			listPorts.add(new wsPojoNodeConnector2.port(namePort,idPort));
 			
 		}
-		lp = new wsPojoNodeConnector.ListPorts(listPorts);
-		return lp;
+
+		return new wsPojoNodeConnector2.ListPorts(listPorts);
 		
 	}
 	
