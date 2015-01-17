@@ -24,8 +24,8 @@ public class ListPortStatistics {
 		String mac;
 		ListPorts lp = new ListPorts();
 		String portId;
-		int receivePackets;
-		int transmitPackets;
+		double receivePackets;
+		double transmitPackets;
 		PortSwitch portS;
 		List <portStatistic> lps;
 		ListWsStats lws = new ListWsStats();

@@ -21,8 +21,7 @@ import com.google.gson.GsonBuilder;
 
 public class RRDThread implements Runnable{
 
-	int in = 0;
-	int out = 0;
+	
 	HttpCliente httpcliente= new HttpCliente();
 	Gson gson = new Gson();
 	String objetoEnJson;
@@ -76,8 +75,9 @@ public class RRDThread implements Runnable{
 				//System.out.println("Puerto: "+ps.getPortId());
 				
 				String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
-				//System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
-				//System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
+				
+				System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
+				System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
 				rrdupdateport(name_bbdd,ps.getReceivePackets(), ps.getTransmitPackets());		
 			}
 		}
