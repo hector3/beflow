@@ -238,7 +238,7 @@ public class BBDDrrdtool {
 			int resta=0;
 			resta = getGranularidad(granularidad);//granularidad fija de 24 h
 			long endTime = Util.getTime();//hasta la actualidad
-			long startTime = endTime-(resta*60*60L);
+			long startTime = endTime-(resta*60L);
 			String response="";
 			//Definición del grafico
 			
@@ -305,41 +305,57 @@ public class BBDDrrdtool {
 			return name_bbdd;
 		}
 		
-		/********************* granularidad *********/
+/********************* granularidad *********/
 		
 		public int getGranularidad(String granularidad){
 			
-			String num =granularidad.substring(0,1);
-			String param = granularidad.substring(1);
-
+			String var =granularidad.substring(0,2);
+			String param = granularidad.substring(2);
+			String num = "";
+			
+			//compruebo si contiene el campo &
+			
+			if(var.substring(1).equals("&")){
+				
+				num = var.substring(0,1);
+			}else num = var;
+		
+			
+			
+			System.out.println(num+"   "+ param);
+			
 			int start =0;
 			
 			switch (param){
 			
 			
-			
+				case "-":
+				start =  Integer.parseInt(num);
+				
+				break;
+				
+				
 				case "h":
-					start =  Integer.parseInt(num);
+					start =  Integer.parseInt(num)*60;
 					break;
 					
 				case "d":
-					start =  Integer.parseInt(num)*24;
+					start =  Integer.parseInt(num)*24*60;
 					break;
 					
 				case "w":
-					start =  Integer.parseInt(num)*7*24;
+					start =  Integer.parseInt(num)*7*24*60;
 					break;
 					
 				case "m":
 					
-					start =  Integer.parseInt(num)*30*24;
+					start =  Integer.parseInt(num)*30*24*60;
 					break;
 				}
 				
 				return start;
 			
 		}
-		
 		
 	
 }

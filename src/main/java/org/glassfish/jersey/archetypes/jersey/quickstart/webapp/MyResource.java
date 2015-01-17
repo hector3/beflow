@@ -832,9 +832,13 @@ public class MyResource {
     public Response getgraph(@PathParam("gran_mac_por") String option) throws UnknownHostException {
 		
 
-		String granularidad =option.substring(0,2);
-		String node_name = option.substring(3);
+	
 		
+		String granularidad =option.substring(0,3);
+		
+		String node_name = option.substring(4);
+		
+		System.out.println(granularidad + "    "+node_name);
 		
 		
 		
