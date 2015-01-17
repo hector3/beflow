@@ -20,7 +20,7 @@
         
         <!-- Dialecto de la base de datos -->
         <!-- MYSQL 5 has de canviar org.hibernate.dialect.MySQL5Dialect-->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>  
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>  
         
         <!-- Otras propiedades importantes -->
         <property name="show_sql">true</property> 
