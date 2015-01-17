@@ -2,11 +2,11 @@ package wsPojoStats;
 
 public class PortSwitch {
 	String portId;
-	int receivePackets;
-	int transmitPackets;
+	double receivePackets;
+	double transmitPackets;
 	
 	
-	public PortSwitch(String portId, int receivePackets, int transmitPackets) {
+	public PortSwitch(String portId, double receivePackets, double transmitPackets) {
 
 		this.portId = portId;
 		this.receivePackets = receivePackets;
@@ -24,22 +24,22 @@ public class PortSwitch {
 	}
 
 
-	public int getReceivePackets() {
+	public double getReceivePackets() {
 		return receivePackets;
 	}
 
 
-	public void setReceivePackets(int receivePackets) {
+	public void setReceivePackets(double receivePackets) {
 		this.receivePackets = receivePackets;
 	}
 
 
-	public int getTransmitPackets() {
+	public double getTransmitPackets() {
 		return transmitPackets;
 	}
 
 
-	public void setTransmitPackets(int transmitPackets) {
+	public void setTransmitPackets(double transmitPackets) {
 		this.transmitPackets = transmitPackets;
 	}
 	

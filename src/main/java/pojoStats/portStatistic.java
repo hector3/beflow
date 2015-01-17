@@ -3,25 +3,25 @@ package pojoStats;
 public class portStatistic {
 	
 	nodeConnector nodeConnector;
-	int receivePackets;
-	int transmitPackets;
-	int receiveBytes;
-	int transmitBytes;
-	int receiveDrops;
-	int transmitDrops;
-	int receiveErrors;
-	int transmitErrors;
-	int receiveFrameError;
-	int receiveOverRunError;
-	int receiveCrcError;
-	int collisionCount;
+	long receivePackets;
+	long transmitPackets;
+	long receiveBytes;
+	long transmitBytes;
+	long receiveDrops;
+	long transmitDrops;
+	long receiveErrors;
+	long transmitErrors;
+	long receiveFrameError;
+	long receiveOverRunError;
+	long receiveCrcError;
+	long collisionCount;
 	
 	
 	public portStatistic(nodeConnector nodeConnector,
-			int receivePackets, int transmitPackets, int receiveBytes,
-			int transmitBytes, int receiveDrops, int transmitDrops,
-			int receiveErrors, int transmitErrors, int receiveFrameError,
-			int receiveOverRunError, int receiveCrcError, int collisionCount) {
+			long receivePackets, long transmitPackets, long receiveBytes,
+			long transmitBytes, long receiveDrops, long transmitDrops,
+			long receiveErrors, long transmitErrors, long receiveFrameError,
+			long receiveOverRunError, long receiveCrcError, long collisionCount) {
 
 		this.nodeConnector = nodeConnector;
 		this.receivePackets = receivePackets;
@@ -49,122 +49,122 @@ public class portStatistic {
 	}
 
 
-	public int getReceivePackets() {
+	public long getReceivePackets() {
 		return receivePackets;
 	}
 
 
-	public void setReceivePackets(int receivePackets) {
+	public void setReceivePackets(long receivePackets) {
 		this.receivePackets = receivePackets;
 	}
 
 
-	public int getTransmitPackets() {
+	public long getTransmitPackets() {
 		return transmitPackets;
 	}
 
 
-	public void setTransmitPackets(int transmitPackets) {
+	public void setTransmitPackets(long transmitPackets) {
 		this.transmitPackets = transmitPackets;
 	}
 
 
-	public int getReceiveBytes() {
+	public long getReceiveBytes() {
 		return receiveBytes;
 	}
 
 
-	public void setReceiveBytes(int receiveBytes) {
+	public void setReceiveBytes(long receiveBytes) {
 		this.receiveBytes = receiveBytes;
 	}
 
 
-	public int getTransmitBytes() {
+	public long getTransmitBytes() {
 		return transmitBytes;
 	}
 
 
-	public void setTransmitBytes(int transmitBytes) {
+	public void setTransmitBytes(long transmitBytes) {
 		this.transmitBytes = transmitBytes;
 	}
 
 
-	public int getReceiveDrops() {
+	public long getReceiveDrops() {
 		return receiveDrops;
 	}
 
 
-	public void setReceiveDrops(int receiveDrops) {
+	public void setReceiveDrops(long receiveDrops) {
 		this.receiveDrops = receiveDrops;
 	}
 
 
-	public int getTransmitDrops() {
+	public long getTransmitDrops() {
 		return transmitDrops;
 	}
 
 
-	public void setTransmitDrops(int transmitDrops) {
+	public void setTransmitDrops(long transmitDrops) {
 		this.transmitDrops = transmitDrops;
 	}
 
 
-	public int getReceiveErrors() {
+	public long getReceiveErrors() {
 		return receiveErrors;
 	}
 
 
-	public void setReceiveErrors(int receiveErrors) {
+	public void setReceiveErrors(long receiveErrors) {
 		this.receiveErrors = receiveErrors;
 	}
 
 
-	public int getTransmitErrors() {
+	public long getTransmitErrors() {
 		return transmitErrors;
 	}
 
 
-	public void setTransmitErrors(int transmitErrors) {
+	public void setTransmitErrors(long transmitErrors) {
 		this.transmitErrors = transmitErrors;
 	}
 
 
-	public int getReceiveFrameError() {
+	public long getReceiveFrameError() {
 		return receiveFrameError;
 	}
 
 
-	public void setReceiveFrameError(int receiveFrameError) {
+	public void setReceiveFrameError(long receiveFrameError) {
 		this.receiveFrameError = receiveFrameError;
 	}
 
 
-	public int getReceiveOverRunError() {
+	public long getReceiveOverRunError() {
 		return receiveOverRunError;
 	}
 
 
-	public void setReceiveOverRunError(int receiveOverRunError) {
+	public void setReceiveOverRunError(long receiveOverRunError) {
 		this.receiveOverRunError = receiveOverRunError;
 	}
 
 
-	public int getReceiveCrcError() {
+	public long getReceiveCrcError() {
 		return receiveCrcError;
 	}
 
 
-	public void setReceiveCrcError(int receiveCrcError) {
+	public void setReceiveCrcError(long receiveCrcError) {
 		this.receiveCrcError = receiveCrcError;
 	}
 
 
-	public int getCollisionCount() {
+	public long getCollisionCount() {
 		return collisionCount;
 	}
 
 
-	public void setCollisionCount(int collisionCount) {
+	public void setCollisionCount(long collisionCount) {
 		this.collisionCount = collisionCount;
 	}
 	
