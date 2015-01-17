@@ -1,5 +1,7 @@
 package pojoNodeConnector2;
 
+//Al loro que la lidia está tará
+
 public class nodeconnector {
 	String id;
 
