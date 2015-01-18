@@ -1,5 +1,7 @@
 package rrdtool;
 
+import httpclient.HttpCliente;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +17,12 @@ import org.rrd4j.core.Sample;
 import org.rrd4j.core.Util;
 import org.rrd4j.graph.RrdGraph;
 import org.rrd4j.graph.RrdGraphDef;
+
+import com.google.gson.Gson;
+
+import wsPojoStats.ListWsStats;
+import wsPojoStats.PortSwitch;
+import wsPojoStats.WsObjectStats;
 
 public class BBDDrrdtool {
 
@@ -68,6 +76,12 @@ public class BBDDrrdtool {
         rrdDef.addDatasource("IN", DsType.DERIVE, 600, 0, Double.NaN);
         rrdDef.addDatasource("OUT", DsType.DERIVE, 600, 0, Double.NaN);
         
+        
+        rrdDef.addDatasource("DROP IN", DsType.DERIVE, 600, 0, Double.NaN);
+        rrdDef.addDatasource("DROP OUT", DsType.DERIVE, 600, 0, Double.NaN);
+        
+        rrdDef.addDatasource("ERROR IN", DsType.DERIVE, 600, 0, Double.NaN);
+        rrdDef.addDatasource("ERROR OUT", DsType.DERIVE, 600, 0, Double.NaN);
         //derive toma el valor antiguo hace la diferencia con el actual, y lo promedia con el tiempo pasado
        
         //como guardo los datos (consolidación)
@@ -83,6 +97,10 @@ public class BBDDrrdtool {
         rrdDef.addArchive(ConsolFun.MIN, 0.5, 1, 120);//consolida el min valor
         rrdDef.addArchive(ConsolFun.MIN, 0.5, 120, 24);
         rrdDef.addArchive(ConsolFun.MIN, 0.5, 2880,30);
+        
+        rrdDef.addArchive(ConsolFun.LAST, 0.5, 1, 120);//consolida el último valor
+        rrdDef.addArchive(ConsolFun.LAST, 0.5, 120, 24);
+        rrdDef.addArchive(ConsolFun.LAST, 0.5, 2880,30);
         
         RrdDb rrdDb = new RrdDb(rrdDef); //creo la bbdd con lo que he definido
         rrdDb.close();
@@ -141,7 +159,7 @@ public class BBDDrrdtool {
 		}
 		
 		//Actualización PORT
-		public void updatePORTstatistic(String name_port, double received, double transmitted) throws IOException{
+		public void updatePORTstatistic(String name_port, double receiveBytes, double transmitBytes,double receiveDrops, double transmitDrops, double receiveErrors,double transmitErrors) throws IOException{
 			
 			RrdDb rrdDb2 = new RrdDb("/var/www/html/beflow/rrdtool/"+name_port+".rrd");
 			//no se puede actualizar bbdd en un momento ya actualizado
@@ -152,13 +170,24 @@ public class BBDDrrdtool {
 			
 			else{
 				
-				received = received *8; // bits
-				transmitted= transmitted *8;
-				System.out.println(" Actualizandose datos");
+				receiveBytes = receiveBytes*8; // bits
+				transmitBytes=  transmitBytes*8;
+				
 		        Sample sample = rrdDb2.createSample();
 		        sample.setTime(Util.getTime());
-		        sample.setValue("IN", received);
-		        sample.setValue("OUT", transmitted);
+		        
+		        sample.setValue("IN", receiveBytes);
+		        sample.setValue("OUT", transmitBytes);
+		     
+		        sample.setValue("DROP IN", receiveDrops);
+		        sample.setValue("DROP OUT", transmitDrops);
+		        
+		        //System.out.println("bytes"+ receiveBytes);
+		       // System.out.println("Errors"+receiveErrors);
+		        
+		        sample.setValue("ERROR IN", receiveErrors);
+		        sample.setValue("ERROR OUT", transmitErrors);
+
 		        sample.update();
 				rrdDb2.close();
 			}
@@ -224,7 +253,9 @@ public class BBDDrrdtool {
 		
 		public String genGraph (String name_bbdd, String granularidad) throws IOException{
 			
-			
+			//prueba policies
+			/*************************************************************/
+			getConsum(name_bbdd);
 		
 			String titulo ="";
 			
@@ -259,17 +290,45 @@ public class BBDDrrdtool {
 	    	graphDef.setTimeSpan(startTime, endTime);
 	    	graphDef.datasource("IN", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "IN", ConsolFun.AVERAGE);
 	    	graphDef.datasource("OUT", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "OUT", ConsolFun.AVERAGE);
+	    	//
+	    	graphDef.datasource("DROP IN", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "DROP IN", ConsolFun.AVERAGE);
+	    	graphDef.datasource("DROP OUT", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "DROP OUT", ConsolFun.AVERAGE);
+	    	
+	    	graphDef.datasource("ERROR IN", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "ERROR IN", ConsolFun.AVERAGE);
+	    	graphDef.datasource("ERROR OUT", "/var/www/html/beflow/rrdtool/"+name_bbdd+".rrd", "ERROR OUT", ConsolFun.AVERAGE);
 	    	
 	    	
-	    	graphDef.area("IN", Color.GREEN, "Inbound");
+	    	
+	    	graphDef.area("IN", Color.GREEN, "Inbound         ");
 	    	graphDef.gprint("IN", ConsolFun.LAST, "Current:  %.3f%S");
 	    	graphDef.gprint("IN", ConsolFun.AVERAGE, "Average:  %.3f%S");
 	    	graphDef.gprint("IN", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
 	    	
-	    	graphDef.line("OUT", Color.BLUE, "Outbound",2);
+	    	graphDef.line("OUT", Color.BLUE, "Outbound        ",2);
 	    	graphDef.gprint("OUT", ConsolFun.LAST, "Current:  %.3f%S");
 	    	graphDef.gprint("OUT", ConsolFun.AVERAGE, "Average:  %.3f%S");
 	    	graphDef.gprint("OUT", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
+	    	graphDef.comment("\\r");
+	    	graphDef.line("DROP IN", Color.RED, "Inbound Drops   ",2);
+	    	graphDef.gprint("DROP IN", ConsolFun.LAST, "Current:  %.3f%S");
+	    	graphDef.gprint("DROP IN", ConsolFun.AVERAGE, "Average:  %.3f%S");
+	    	graphDef.gprint("DROP IN", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
+
+	    	graphDef.line("DROP OUT", Color.ORANGE, "Outbound Drops  ",2);
+	    	graphDef.gprint("DROP OUT", ConsolFun.LAST, "Current:  %.3f%S");
+	    	graphDef.gprint("DROP OUT", ConsolFun.AVERAGE, "Average:  %.3f%S");
+	    	graphDef.gprint("DROP OUT", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
+	    	graphDef.comment("\\r");
+	    	graphDef.line("ERROR IN", Color.MAGENTA, "Inbound Errors  ",2);
+	    	graphDef.gprint("ERROR IN", ConsolFun.LAST, "Current:  %.3f%S");
+	    	graphDef.gprint("ERROR IN", ConsolFun.AVERAGE, "Average:  %.3f%S");
+	    	graphDef.gprint("ERROR IN", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
+
+	    	graphDef.line("ERROR OUT", Color.PINK, "Outbound Errors ",2);
+	    	graphDef.gprint("ERROR OUT", ConsolFun.LAST, "Current:  %.3f%S");
+	    	graphDef.gprint("ERROR OUT", ConsolFun.AVERAGE, "Average:  %.3f%S");
+	    	graphDef.gprint("ERROR OUT", ConsolFun.MAX, "Maximum:  %.3f%S\\l");
+	    	
 	    	//%8.2lf %s
 	    	graphDef.comment("\\r");
 	    	graphDef.comment("Period From "+Util.getDate(startTime)+" To "+Util.getDate(endTime)+"\\l");
@@ -305,6 +364,40 @@ public class BBDDrrdtool {
 			return name_bbdd;
 		}
 		
+		
+		
+		
+		/*******************Policies
+		 * @throws IOException **********************/
+		
+		public void getConsum(String node_name) throws IOException{
+
+			String objetoJson ="";
+			HttpCliente httpcliente= new HttpCliente();
+			Gson gson = new Gson();
+			
+			objetoJson=httpcliente.getStatsPurged();
+			
+			//System.out.println(objetoEnJson);
+			
+			final ListWsStats listWsObjectStats = gson.fromJson(objetoJson, ListWsStats.class);
+					
+			for (WsObjectStats lws : listWsObjectStats.getListWsObjectStats()){
+				
+				//System.out.println("MAC: "+lws.getMac());
+				
+				for(PortSwitch ps: lws.getListPorts()){
+					
+					//System.out.println("Puerto: "+ps.getPortId());
+					String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
+					
+					if(node_name.equals(name_bbdd)){
+						System.out.println("Datos consumidos Entrada: "+ps.getReceiveBytes());
+						System.out.println("Datos consumidos Salida: "+ps.getTransmitBytes());						
+					}
+				}
+			}
+		}
 /********************* granularidad *********/
 		
 		public int getGranularidad(String granularidad){

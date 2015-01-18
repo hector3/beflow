@@ -24,8 +24,13 @@ public class ListPortStatistics {
 		String mac;
 		ListPorts lp = new ListPorts();
 		String portId;
-		double receivePackets;
-		double transmitPackets;
+		double receiveBytes;
+		double transmitBytes;
+		double receiveErrors;
+		double receiveDrops;
+		double transmitErrors;
+		double transmitDrops;
+		
 		PortSwitch portS;
 		List <portStatistic> lps;
 		ListWsStats lws = new ListWsStats();
@@ -35,9 +40,15 @@ public class ListPortStatistics {
 			lp.removeList();
 			for(portStatistic ps : lps){
 				portId=ps.getNodeConnector().getId();
-				receivePackets=ps.getReceivePackets();
-				transmitPackets=ps.getTransmitPackets();
-				portS = new PortSwitch(portId, receivePackets, transmitPackets);
+				receiveBytes=ps.getReceiveBytes();
+				transmitBytes=ps.getTransmitBytes();
+				receiveDrops=ps.getReceiveDrops();
+				receiveErrors=ps.getReceiveErrors();
+				transmitDrops=ps.getTransmitDrops();
+				transmitErrors=ps.getTransmitErrors();
+				
+				
+				portS = new PortSwitch(portId, receiveBytes, transmitBytes,receiveDrops,transmitDrops,receiveErrors,transmitErrors);
 				lp.addPort(portS);
 				
 			}
