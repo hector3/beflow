@@ -75,7 +75,7 @@ public class RRDThread implements Runnable{
 				//System.out.println("Puerto: "+ps.getPortId());
 				
 				String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
-				
+				//System.out.println(name_bbdd);
 				//System.out.println("Bytes recibidos: "+ps.getReceiveBytes());
 				//System.out.println("Bytes enviados: "+ps.getTransmitBytes());
 				//System.out.println("Drops recibidos: "+ps.getReceiveDrops()+"Drops tx:"+ps.getTransmitDrops());
