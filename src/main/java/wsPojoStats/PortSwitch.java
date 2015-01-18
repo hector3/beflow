@@ -2,15 +2,22 @@ package wsPojoStats;
 
 public class PortSwitch {
 	String portId;
-	double receivePackets;
-	double transmitPackets;
+	double receiveBytes;
+	double transmitBytes;
+	double receiveDrops;
+	double transmitDrops;
+	double receiveErrors;
+	double transmitErrors;
 	
-	
-	public PortSwitch(String portId, double receivePackets, double transmitPackets) {
+	public PortSwitch(String portId, double receiveBytes, double transmitBytes,double receiveDrops, double transmitDrops, double receiveErrors,double transmitErrors) {
 
 		this.portId = portId;
-		this.receivePackets = receivePackets;
-		this.transmitPackets = transmitPackets;
+		this.receiveBytes = receiveBytes;
+		this.transmitBytes = transmitBytes;
+		this.receiveDrops =receiveDrops;
+		this.transmitDrops=transmitDrops;
+		this.receiveErrors=receiveErrors;
+		this.transmitErrors=transmitErrors;
 	}
 
 
@@ -24,24 +31,69 @@ public class PortSwitch {
 	}
 
 
-	public double getReceivePackets() {
-		return receivePackets;
+	public double getReceiveBytes() {
+		return receiveBytes;
 	}
 
 
-	public void setReceivePackets(double receivePackets) {
-		this.receivePackets = receivePackets;
+	public void setReceiveBytes(double receiveBytes) {
+		this.receiveBytes = receiveBytes;
 	}
 
 
-	public double getTransmitPackets() {
-		return transmitPackets;
+	public double getTransmitBytes() {
+		return transmitBytes;
 	}
 
 
-	public void setTransmitPackets(double transmitPackets) {
-		this.transmitPackets = transmitPackets;
+	public void setTransmitBytes(double transmitBytes) {
+		this.transmitBytes = transmitBytes;
 	}
+
+
+	public double getReceiveDrops() {
+		return receiveDrops;
+	}
+
+
+	public void setReceiveDrops(double receiveDrops) {
+		this.receiveDrops = receiveDrops;
+	}
+
+
+	public double getTransmitDrops() {
+		return transmitDrops;
+	}
+
+
+	public void setTransmitDrops(double transmitDrops) {
+		this.transmitDrops = transmitDrops;
+	}
+
+
+	public double getReceiveErrors() {
+		return receiveErrors;
+	}
+
+
+	public void setReceiveErrors(double receiveErrors) {
+		this.receiveErrors = receiveErrors;
+	}
+
+
+	public double getTransmitErrors() {
+		return transmitErrors;
+	}
+
+
+	public void setTransmitErrors(double transmitErrors) {
+		this.transmitErrors = transmitErrors;
+	}
+	
+	
+	
+	
+	
 	
 	
 }
