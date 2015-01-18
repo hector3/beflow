@@ -28,4 +28,29 @@ public class Capabilities {
 		
 		return cap;
 	}
+
+	public List <String> genListPurged2(String macRequest){
+		wsPojoCap.Capabilities cap;
+		//List <wsPojoCap.nodecap> listcap = new ArrayList <wsPojoCap.nodecap>();
+		List <String> listCap = null;
+		for(nodeProperties np : nodeProperties){
+			String mac = np.getProperties().getMacAddress().getValue();
+			if(macRequest.contains(mac)){
+				String capab = np.getProperties().getSupportedFlowActions().getValue();
+				String cadenaSinExtremos = capab.substring(1, capab.length()-1).replaceAll("\\s","");
+				listCap = new ArrayList<String>(Arrays.asList(cadenaSinExtremos.split(",")));
+				break;
+			}
+			
+			
+			
+			//listcap.add(new wsPojoCap.nodecap(mac, listCap));
+		}
+		//cap = new wsPojoCap.Capabilities(listcap);
+		
+		return listCap;
+	}
+	
+
+	
 }

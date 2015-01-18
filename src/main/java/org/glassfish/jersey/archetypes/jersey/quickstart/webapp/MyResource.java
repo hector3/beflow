@@ -668,32 +668,7 @@ public class MyResource {
 		System.out.println(response.toString());
 		return(response);	
     }	
-/*
-	@Path("/getCapByMac/{mac}")
-	@GET
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCapByMac(@PathParam("mac") String mac) throws UnknownHostException {
-
-		String objetoEnJson;
-
-		try{
-			
-			objetoEnJson=httpcliente.getPortsByMac(mac);
-			System.out.println(objetoEnJson);
-			final pojoNodeConnector2.NodeConnectorClass nc = gson.fromJson(objetoEnJson, pojoNodeConnector2.NodeConnectorClass.class);
-			objetoEnJson = gson.toJson(nc.genListPurged());
-			response = ls.genResponse(objetoEnJson);
-			
-		}catch(Exception e){
-			System.out.println("problema con GSON, excepción: "+e.getMessage());
-			objetoEnJson="error";
-			response = ls.genResponse(objetoEnJson);
-		}
-		System.out.println(response.toString());
-		return(response);	
-    }	
-*/		
+	
 
 	@Path("/delFlow/{mac}/{name}")
 	@GET
@@ -720,6 +695,32 @@ public class MyResource {
 		
 		return(response);	
     }
+
+	@Path("/getCapByMac/{mac}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCapByMac(@PathParam("mac") String mac) throws UnknownHostException {
+
+		String objetoEnJson;
+
+		try{
+			
+			objetoEnJson=httpcliente.getNodesController();
+			System.out.println(objetoEnJson);
+			final Capabilities cap = gson.fromJson(objetoEnJson, Capabilities.class);
+			objetoEnJson = gson.toJson(cap.genListPurged2(mac));
+			response = ls.genResponse(objetoEnJson);
+			
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			response = ls.genResponse(objetoEnJson);
+		}
+		System.out.println(response.toString());
+		return(response);		
+    }	
+	
 /*********************************NODES******************************************/
 	
 	@Path("/addNode")
