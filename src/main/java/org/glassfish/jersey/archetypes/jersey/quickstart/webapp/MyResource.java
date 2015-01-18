@@ -13,6 +13,7 @@ import wsPojoStats.ListWsStats;
 import wsPojoStats.WsObjectStats;
 import wsPojoTopology.Topology;
 import wsobjects.*;
+import wspolicies.Consum;
 import controller.*;
 
 import javax.servlet.RequestDispatcher;
@@ -935,5 +936,38 @@ public class MyResource {
 
 		return(response);    	
     }
+	
+	
+	
+	
+	@Path("/getPolicies/{node_name}")
+	@GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConsum(@PathParam("node_name") String node) throws UnknownHostException {
+		
+		Consum consum = null;
+		 
+		try{
+			consum=rrdtool.getConsum(node);
+			
+			
+		}
+		catch(Exception e){
+			System.out.println("problemas.. Excepcion: "+e.getMessage());
+		}
+		String objetoEnJson;
+		try{
+			objetoEnJson=gson.toJson(consum);
+			response = ls.genResponse(objetoEnJson);
+		}catch(Exception e){
+			System.out.println("problema con GSON, excepción: "+e.getMessage());
+			objetoEnJson="error";
+			
+		}
+		
+		return(response);
+	   
+	}
 
 }

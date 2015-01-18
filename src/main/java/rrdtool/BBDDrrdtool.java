@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import wsPojoStats.ListWsStats;
 import wsPojoStats.PortSwitch;
 import wsPojoStats.WsObjectStats;
+import wsobjects.CompanyWS;
+import wspolicies.Consum;
 
 public class BBDDrrdtool {
 
@@ -253,9 +255,7 @@ public class BBDDrrdtool {
 		
 		public String genGraph (String name_bbdd, String granularidad) throws IOException{
 			
-			//prueba policies
-			/*************************************************************/
-			getConsum(name_bbdd);
+			
 		
 			String titulo ="";
 			
@@ -370,11 +370,12 @@ public class BBDDrrdtool {
 		/*******************Policies
 		 * @throws IOException **********************/
 		
-		public void getConsum(String node_name) throws IOException{
+		public Consum getConsum(String node_name) throws IOException{
 
 			String objetoJson ="";
 			HttpCliente httpcliente= new HttpCliente();
 			Gson gson = new Gson();
+			Consum c = null;
 			
 			objetoJson=httpcliente.getStatsPurged();
 			
@@ -391,12 +392,20 @@ public class BBDDrrdtool {
 					//System.out.println("Puerto: "+ps.getPortId());
 					String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
 					
+					
 					if(node_name.equals(name_bbdd)){
+						System.out.println(name_bbdd);
+						System.out.println(node_name);	
 						System.out.println("Datos consumidos Entrada: "+ps.getReceiveBytes());
-						System.out.println("Datos consumidos Salida: "+ps.getTransmitBytes());						
+						System.out.println("Datos consumidos Salida: "+ps.getTransmitBytes());		
+						c =new Consum(ps.getReceiveBytes(),ps.getTransmitBytes());
+						
+										
 					}
 				}
 			}
+			return c;	
+			
 		}
 /********************* granularidad *********/
 		
