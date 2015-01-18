@@ -19,11 +19,11 @@
     <url-pattern>/beflow/*</url-pattern>
   </servlet-mapping>
   
-  
- 	<servlet>
+  	<servlet>
   		<servlet-name>Servlet2</servlet-name>
    		<servlet-class>rrdtool.Servlet2</servlet-class>
    		<load-on-startup>2</load-on-startup>
-	</servlet>
+	</servlet> 
+
 
 </web-app>

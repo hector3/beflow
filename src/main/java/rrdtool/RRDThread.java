@@ -76,9 +76,12 @@ public class RRDThread implements Runnable{
 				
 				String name_bbdd= lws.getMac()+"_"+ps.getPortId();//MAC_numpuerto (nombre bbdd)
 				
-				System.out.println("Paquetes recibidos: "+ps.getReceivePackets());
-				System.out.println("Paquetes enviados: "+ps.getTransmitPackets());
-				rrdupdateport(name_bbdd,ps.getReceivePackets(), ps.getTransmitPackets());		
+				//System.out.println("Bytes recibidos: "+ps.getReceiveBytes());
+				//System.out.println("Bytes enviados: "+ps.getTransmitBytes());
+				//System.out.println("Drops recibidos: "+ps.getReceiveDrops()+"Drops tx:"+ps.getTransmitDrops());
+				//System.out.println("Error recibidos: "+ps.getReceiveErrors()+ "Errores tx:"+ps.getTransmitErrors());
+				rrdupdateport(name_bbdd,ps.getReceiveBytes(), ps.getTransmitBytes(),ps.getReceiveDrops(),ps.getTransmitDrops(),ps.getReceiveErrors(),ps.getTransmitErrors());		
+
 			}
 		}
 		
@@ -86,10 +89,10 @@ public class RRDThread implements Runnable{
 	
 	//metodo actualiza la bbdd
 	
-	public void rrdupdateport(String name, double received, double transmitted){
+	public void rrdupdateport(String name, double receiveBytes, double transmitBytes,double receiveDrops, double transmitDrops, double receiveErrors,double transmitErrors){
 		
 		BBDDrrdtool bbdd = new BBDDrrdtool();
-		
+		double varerr = -1;
 		if(!bbdd.fileExist(name)){
 			
 			System.out.println("bbdd no existe crearla y actualizarla");
@@ -104,7 +107,18 @@ public class RRDThread implements Runnable{
 			
 			//actualizo bbdd
 			try {
-				bbdd.updatePORTstatistic(name, received, transmitted);
+				
+				if(receiveErrors== varerr){
+					receiveErrors=0;
+				}else receiveErrors =receiveErrors;
+				
+				if(transmitErrors== varerr){
+					transmitErrors=0;
+				}else transmitErrors =transmitErrors;
+				
+				//System.out.println(receiveErrors+"  "+transmitErrors ); 
+				System.out.println(" Actualizandose datos");
+				bbdd.updatePORTstatistic(name, receiveBytes, transmitBytes,receiveDrops,transmitDrops,receiveErrors,transmitErrors);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -114,7 +128,17 @@ public class RRDThread implements Runnable{
 		else{
 			System.out.println("bbdd existe actualizarla");
 			try {
-				bbdd.updatePORTstatistic(name, received, transmitted);
+				
+				if(receiveErrors== varerr){
+					receiveErrors=0;
+				}else receiveErrors =receiveErrors;
+				
+				if(transmitErrors== varerr){
+					transmitErrors=0;
+				}else transmitErrors =transmitErrors;
+				
+				System.out.println(" Actualizandose datos");
+				bbdd.updatePORTstatistic(name, receiveBytes, transmitBytes,receiveDrops,transmitDrops,receiveErrors,transmitErrors);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
